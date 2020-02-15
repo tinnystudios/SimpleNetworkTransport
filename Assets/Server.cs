@@ -24,7 +24,7 @@ public class Server : ServerBase
     {
         foreach (var reader in Readers)
         {
-            if (reader.ConnectionId != connectionId)
+            if (reader.ConnectionId != null && reader.ConnectionId != connectionId)
                 continue;
 
             var context = default(DataStreamReader.Context);
