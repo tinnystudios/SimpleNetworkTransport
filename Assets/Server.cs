@@ -36,8 +36,8 @@ public class Server : ServerBase
                 continue;
 
             var writer = new DataStreamWriter(1000000, Allocator.Temp);
-            writer.Write(newConnectionSenderId);
-            writer.Write(connection.InternalId);
+            writer.Write(addPreviousGhostSenderId);
+            writer.WriteString(connection.InternalId.ToString());
             m_Driver.Send(NetworkPipeline.Null, c, writer);
             writer.Dispose();
         }
@@ -81,9 +81,7 @@ public class Server : ServerBase
             var id = stream.ReadInt(ref context);
 
             if (id == reader.Id)
-            {
                 reader.Read(connectionId, stream, ref context);
-            }
         }
     }
 

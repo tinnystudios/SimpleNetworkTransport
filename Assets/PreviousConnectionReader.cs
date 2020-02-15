@@ -14,7 +14,7 @@ public class PreviousConnectionReader : NetReader
             return;
 
         var array = str.ToString().Split(',');
-        
+
         foreach(var val in array)
         {
             var id = int.Parse(val);
