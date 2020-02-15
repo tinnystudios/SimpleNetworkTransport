@@ -7,16 +7,22 @@ public class ChatNetSender : NetSender
     public InputField InputField;
     public ClientBehaviour Client;
 
-    public override DataStreamWriter Write()
+    public override DataStreamWriter GetNew()
     {
-        var writer = new DataStreamWriter(100000, Allocator.Temp);
-        writer.WriteString(InputField.text);
+        return new DataStreamWriter(100000, Allocator.Temp);
+    }
 
+    public override DataStreamWriter Write(DataStreamWriter writer)
+    {
+        writer.WriteString(InputField.text);
         return writer;
     }
 
     public void Send()
     {
-        Client.Send(Write());
+        var writer = GetNew();
+        writer.Write(Id);
+        Write(writer);
+        Client.Send(writer);
     }
 }

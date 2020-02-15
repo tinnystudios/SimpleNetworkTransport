@@ -3,9 +3,13 @@ using Unity.Networking.Transport;
 
 public class PingSender : NetSender
 {
-    public override DataStreamWriter Write()
+    public override DataStreamWriter GetNew()
     {
-        var writer = new DataStreamWriter(4, Allocator.Temp);
+        return new DataStreamWriter(100, Allocator.Temp);
+    }
+
+    public override DataStreamWriter Write(DataStreamWriter writer)
+    {
         writer.Write(0);
         return writer;
     }

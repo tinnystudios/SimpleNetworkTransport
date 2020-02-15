@@ -67,12 +67,19 @@ public class ClientBehaviour : MonoBehaviour
                 var readerCtx = default(DataStreamReader.Context);
 
                 foreach (var reader in Readers)
-                    reader.Read(0, stream, ref readerCtx);
-
+                {
+                    var id = stream.ReadInt(ref readerCtx);
+                    if (id == reader.Id)
+                    {
+                        reader.Read(0, stream, ref readerCtx);
+                    }
+                }
                 // At the moment this is to keep the client connected.
                 foreach (var sender in Senders)
                 {
-                    var writer = sender.Write();
+                    var writer = sender.GetNew();
+                    writer.Write(sender.Id);
+                    sender.Write(writer);
                     Send(writer);
                 }
             }

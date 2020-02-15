@@ -8,11 +8,15 @@ public class Server : ServerBase
     public List<NetReader> Readers;
     public List<NetSender> Senders;
 
-    protected override void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context context)
+    protected override void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context c)
     {
         foreach (var reader in Readers)
         {
-            reader.Read(connectionId, stream, ref context);
+            var context = default(DataStreamReader.Context);
+            var id = stream.ReadInt(ref context);
+
+            if(id == reader.Id)
+                reader.Read(connectionId, stream, ref context);
         }
     }
 
@@ -20,7 +24,11 @@ public class Server : ServerBase
     {
         foreach (var sender in Senders)
         {
-            var writer = sender.Write();
+            var writer = sender.GetNew();
+
+            writer.Write(sender.Id);
+            sender.Write(writer);
+
             m_Driver.Send(NetworkPipeline.Null, networkConnection, writer);
             writer.Dispose();
         }

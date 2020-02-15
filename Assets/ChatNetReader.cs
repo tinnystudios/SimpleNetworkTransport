@@ -1,4 +1,5 @@
 ﻿using Unity.Networking.Transport;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class ChatNetReader : NetReader
