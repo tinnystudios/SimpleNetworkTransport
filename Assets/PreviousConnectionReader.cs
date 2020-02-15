@@ -19,7 +19,8 @@ public class PreviousConnectionReader : NetReader
         {
             var id = int.Parse(val);
 
-            var obj = new GameObject();
+            var obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+
             var reader = obj.AddComponent<PositionNetReader>();
             reader.Target = obj.transform;
             reader.Id = 4;
