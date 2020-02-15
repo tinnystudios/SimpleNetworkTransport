@@ -12,7 +12,6 @@ public class Server : ServerBase
 
     protected override void NewConnection(NetworkConnection connection)
     {
-        /*
         // Making the ghost on the server side, basically it read position from the new connection
         var player = Instantiate(Player);
         var positionReader = player.AddComponent<PositionNetReader>();
@@ -22,10 +21,10 @@ public class Server : ServerBase
         Readers.Add(positionReader);
 
         // Sending the ghost on the client side, basically it send the new ghost position outwardly to all clients
-        var positionSender = new GameObject().AddComponent<PositionNetSender>();
+        var positionSender = player.AddComponent<PositionNetSender>();
         positionSender.ConnectionId = connection.InternalId;
+        positionSender.Id = 4;
         Senders.Add(positionSender);
-        */
 
         var newConnectionSenderId = 99;
         var addPreviousGhostSenderId = 100;
@@ -48,13 +47,21 @@ public class Server : ServerBase
         previousGhostWriter.Write(addPreviousGhostSenderId);
 
         var str = "";
+        var count = 0;
         // Tell client to add ghost readers for each ids
         foreach (var c in m_Connections)
         {
+            count++;
+
             if (c.InternalId == connection.InternalId)
                 continue;
 
-            str += $"{c.InternalId},";
+            str += $"{c.InternalId}";
+
+            if (count < m_Connections.Length - 1)
+            {
+                str += ",";
+            }
         }
 
         previousGhostWriter.WriteString(str);
@@ -73,8 +80,10 @@ public class Server : ServerBase
             var context = default(DataStreamReader.Context);
             var id = stream.ReadInt(ref context);
 
-            if(id == reader.Id)
+            if (id == reader.Id)
+            {
                 reader.Read(connectionId, stream, ref context);
+            }
         }
     }
 

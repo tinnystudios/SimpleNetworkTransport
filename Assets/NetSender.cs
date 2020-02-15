@@ -20,5 +20,7 @@ public abstract class NetReader : MonoBehaviour
     /// </summary>
     public int? ConnectionId = null;
 
+    public bool Log;
+
     public abstract void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context context);
 }

@@ -64,16 +64,30 @@ public class ClientBehaviour : MonoBehaviour
             }
             else if (cmd == NetworkEvent.Type.Data)
             {
-                foreach (var reader in Readers)
+                // Temp
+                var readers = new List<NetReader>(Readers);
+                foreach (var reader in readers)
                 {
                     var readerCtx = default(DataStreamReader.Context);
 
                     var id = stream.ReadInt(ref readerCtx);
                     if (id == reader.Id)
                     {
+                        if (reader.ConnectionId != null)
+                        {
+                            var targetConnectionId = stream.ReadInt(ref readerCtx);
+                            if (targetConnectionId != reader.ConnectionId)
+                            {
+                                if(reader.Log)
+                                    Debug.Log($"{targetConnectionId}");
+                                continue;
+                            }
+                        }
+
                         reader.Read(0, stream, ref readerCtx);
                     }
                 }
+
                 // At the moment this is to keep the client connected.
                 foreach (var sender in Senders)
                 {
