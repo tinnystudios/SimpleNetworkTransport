@@ -14,6 +14,7 @@ public class Server : ServerBase
         // Making the ghost
         var player = Instantiate(Player);
         var positionReader = player.AddComponent<PositionNetReader>();
+        positionReader.ConnectionId = connection.InternalId;
         positionReader.Id = 4;
         positionReader.Target = player.transform;
         Readers.Add(positionReader);
@@ -23,6 +24,9 @@ public class Server : ServerBase
     {
         foreach (var reader in Readers)
         {
+            if (reader.ConnectionId != connectionId)
+                continue;
+
             var context = default(DataStreamReader.Context);
             var id = stream.ReadInt(ref context);
 

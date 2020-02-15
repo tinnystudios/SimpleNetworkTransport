@@ -12,6 +12,7 @@ public abstract class NetSender : MonoBehaviour
 public abstract class NetReader : MonoBehaviour
 {
     public int Id;
+    public int ConnectionId;
 
     public abstract void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context context);
 }
