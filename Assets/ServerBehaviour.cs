@@ -64,6 +64,7 @@ public abstract class ServerBase : MonoBehaviour
         while ((c = m_Driver.Accept()) != default(NetworkConnection))
         {
             m_Connections.Add(c);
+            NewConnection(c);
             Debug.Log($"New user connected: {c.InternalId}");
         }
 
@@ -93,6 +94,7 @@ public abstract class ServerBase : MonoBehaviour
         }
     }
 
+    protected abstract void NewConnection(NetworkConnection connection);
     protected abstract void Send(ref UdpNetworkDriver m_Driver, NetworkConnection networkConnection);
     protected abstract void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context context);
 }

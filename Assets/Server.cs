@@ -1,12 +1,23 @@
 ﻿using UnityEngine;
 using Unity.Networking.Transport;
-using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class Server : ServerBase
 {
     public List<NetReader> Readers;
     public List<NetSender> Senders;
+
+    public GameObject Player;
+
+    protected override void NewConnection(NetworkConnection connection)
+    {
+        // Making the ghost
+        var player = Instantiate(Player);
+        var positionReader = player.AddComponent<PositionNetReader>();
+        positionReader.Id = 4;
+        positionReader.Target = player.transform;
+        Readers.Add(positionReader);
+    }
 
     protected override void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context c)
     {
