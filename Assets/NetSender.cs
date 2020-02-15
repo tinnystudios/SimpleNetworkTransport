@@ -5,6 +5,8 @@ using UnityEngine;
 public abstract class NetSender : MonoBehaviour
 {
     public int Id;
+    public int? ConnectionId = null;
+
     public abstract DataStreamWriter GetNew();
     public abstract DataStreamWriter Write(DataStreamWriter stream);
 }

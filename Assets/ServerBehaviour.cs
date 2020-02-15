@@ -8,7 +8,7 @@ public abstract class ServerBase : MonoBehaviour
 {
     public UdpNetworkDriver m_Driver;
     public bool ClientBuild;
-    private NativeList<NetworkConnection> m_Connections;
+    protected NativeList<NetworkConnection> m_Connections;
 
     void Start ()
     {

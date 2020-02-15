@@ -64,10 +64,10 @@ public class ClientBehaviour : MonoBehaviour
             }
             else if (cmd == NetworkEvent.Type.Data)
             {
-                var readerCtx = default(DataStreamReader.Context);
-
                 foreach (var reader in Readers)
                 {
+                    var readerCtx = default(DataStreamReader.Context);
+
                     var id = stream.ReadInt(ref readerCtx);
                     if (id == reader.Id)
                     {
