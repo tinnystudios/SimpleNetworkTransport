@@ -3,10 +3,7 @@ using Unity.Networking.Transport;
 
 public class PositionNetSender : NetSender
 {
-    public override DataStreamWriter GetNew()
-    {
-        return new DataStreamWriter(1000, Allocator.Temp);
-    }
+    public override DataStreamWriter GetNew() { return new DataStreamWriter(1000, Allocator.Temp); }
 
     public override DataStreamWriter Write(DataStreamWriter writer)
     {

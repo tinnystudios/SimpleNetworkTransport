@@ -9,10 +9,5 @@ public class PositionNetReader : NetReader
         var val = stream.ReadString(ref context);
         var array = val.ToString().Split(',');
         Target.position = new Vector3(float.Parse(array[0]), float.Parse(array[1]), float.Parse(array[2]));
-
-        if (Log)
-        {
-            Debug.Log(transform.name + " Connection Id: " + ConnectionId + " " + val);
-        }
     }
 }
