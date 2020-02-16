@@ -499,6 +499,7 @@ GameObject:
   m_Component:
   - component: {fileID: 443822474}
   - component: {fileID: 443822473}
+  - component: {fileID: 443822475}
   m_Layer: 0
   m_Name: Server
   m_TagString: Untagged
@@ -542,6 +543,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &443822475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443822472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e27775ddeadfbd840a49508e1aeeeeba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Id: 6
+  Server: {fileID: 443822473}
 --- !u!1 &556362408
 GameObject:
   m_ObjectHideFlags: 0
@@ -2140,6 +2155,7 @@ GameObject:
   - component: {fileID: 2091145575}
   - component: {fileID: 2091145574}
   - component: {fileID: 2091145576}
+  - component: {fileID: 2091145577}
   m_Layer: 0
   m_Name: Client
   m_TagString: Untagged
@@ -2166,6 +2182,7 @@ MonoBehaviour:
   Readers:
   - {fileID: 1966388899}
   - {fileID: 2091145576}
+  - {fileID: 2091145577}
 --- !u!4 &2091145575
 Transform:
   m_ObjectHideFlags: 0
@@ -2200,3 +2217,19 @@ MonoBehaviour:
   Id: 100
   Log: 0
   GhostCollection: {fileID: 609476411}
+  ConnectionIdReader: {fileID: 2091145577}
+--- !u!114 &2091145577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2091145573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 890296c1d21c7bc44a7b3c896987ce95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Id: 6
+  Log: 0
+  ServerAssignedConnectionId: -1

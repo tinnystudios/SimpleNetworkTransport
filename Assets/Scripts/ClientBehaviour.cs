@@ -77,11 +77,7 @@ public class ClientBehaviour : MonoBehaviour
                         {
                             var targetConnectionId = stream.ReadInt(ref readerCtx);
                             if (targetConnectionId != reader.ConnectionId)
-                            {
-                                if(reader.Log)
-                                    Debug.Log($"{targetConnectionId}");
                                 continue;
-                            }
                         }
 
                         reader.Read(0, stream, ref readerCtx);

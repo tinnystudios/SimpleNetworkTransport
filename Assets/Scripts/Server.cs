@@ -56,4 +56,10 @@ public class Server : ServerBase
             writer.Dispose();
         }
     }
+
+    public void Write(DataStreamWriter writer, NetworkConnection connection)
+    {
+        m_Driver.Send(NetworkPipeline.Null, connection, writer);
+        writer.Dispose();
+    }
 }

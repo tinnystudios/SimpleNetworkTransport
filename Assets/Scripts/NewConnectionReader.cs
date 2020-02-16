@@ -6,6 +6,7 @@
 public class NewConnectionReader : NetReader
 {
     public GhostCollection GhostCollection;
+    public ConnectionIdReader ConnectionIdReader;
 
     public override void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context context)
     {
@@ -16,11 +17,17 @@ public class NewConnectionReader : NetReader
 
         var array = str.ToString().Split(',');
 
+        // How to ignore yourself?
+        // You first need to know your connection id...
+
         foreach (var val in array)
         {
             var id = int.Parse(val);
-            var client = GetComponentInParent<ClientBehaviour>();
 
+            if (id == ConnectionIdReader.ServerAssignedConnectionId)
+                return;
+
+            var client = GetComponentInParent<ClientBehaviour>();
             GhostCollection.NewGhost(client, id);
         }
     }
