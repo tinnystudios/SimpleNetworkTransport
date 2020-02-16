@@ -5,7 +5,7 @@ using Unity.Collections;
 public class GhostCollection : MonoBehaviour
 {
     public Server Server;
-    public GameObject GhostPrefab;
+    public Ghost GhostPrefab;
 
     public const int newConnectionSenderId = 99;
     public const int addPreviousGhostSenderId = 100;
@@ -71,14 +71,14 @@ public class GhostCollection : MonoBehaviour
     {
         // Making the ghost on the server side, basically it read position from the new connection
         var player = Instantiate(GhostPrefab);
-        var positionReader = player.AddComponent<PositionNetReader>();
+        var positionReader = player.GetComponent<PositionNetReader>();
         positionReader.ConnectionId = connection.InternalId;
         positionReader.Id = 4;
         positionReader.Target = player.transform;
         Server.AddReader(positionReader);
 
         // Sending the ghost on the client side, basically it send the new ghost position outwardly to all clients
-        var positionSender = player.AddComponent<PositionNetSender>();
+        var positionSender = player.GetComponent<PositionNetSender>();
         positionSender.ConnectionId = connection.InternalId;
         positionSender.Id = 4;
         Server.AddSender(positionSender);
