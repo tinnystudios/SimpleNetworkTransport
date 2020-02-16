@@ -103,10 +103,13 @@ public class GhostCollection : MonoBehaviour
         var ghost = Instantiate(GhostPrefab, client.transform);
         ghost.transform.name = $"Ghost: {connectionId}";
 
-        var reader = ghost.GetComponent<PositionNetReader>();
-        reader.ConnectionId = connectionId;
+        var readers = ghost.GetComponentsInChildren<NetReader>();
+        foreach (var reader in readers)
+        {
+            reader.ConnectionId = connectionId;
+            client.Readers.Add(reader);
+        }
 
-        client.Readers.Add(reader);
         return ghost;
     }
 }
