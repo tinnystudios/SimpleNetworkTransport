@@ -7,7 +7,7 @@ public class GhostCollection : MonoBehaviour
     public Server Server;
     public Ghost GhostPrefab;
 
-    public const int newConnectionSenderId = 99;
+    public const int NewClientGhostSenderId = 99;
     public const int addPreviousGhostSenderId = 100;
 
     private void Awake()
@@ -40,7 +40,7 @@ public class GhostCollection : MonoBehaviour
                 str += ",";
         }
 
-        Write(connection, str);
+        Write(connection, str, addPreviousGhostSenderId);
     }
 
     public void AddNewClientGhostToConnectedClients(NetworkConnection connection)
@@ -50,18 +50,31 @@ public class GhostCollection : MonoBehaviour
             if (c.InternalId == connection.InternalId)
                 continue;
 
-            Write(connection, connection.InternalId.ToString());
+            Write(c, connection.InternalId, NewClientGhostSenderId);
         }
     }
 
     /// <summary>
     /// The writer/sender for NewConnectionReader
     /// </summary>
-    public void Write(NetworkConnection connection, string str)
+    public void Write(NetworkConnection connection, string str, int senderId)
     {
         var writer = new DataStreamWriter(1000000, Allocator.Temp);
-        writer.Write(addPreviousGhostSenderId);
+        writer.Write(senderId);
         writer.WriteString(str);
+
+        Server.Driver.Send(NetworkPipeline.Null, connection, writer);
+        writer.Dispose();
+    }
+
+    /// <summary>
+    /// The writer/sender for NewConnectionReader
+    /// </summary>
+    public void Write(NetworkConnection connection, int val, int senderId)
+    {
+        var writer = new DataStreamWriter(1000000, Allocator.Temp);
+        writer.Write(senderId);
+        writer.Write(val);
 
         Server.Driver.Send(NetworkPipeline.Null, connection, writer);
         writer.Dispose();
