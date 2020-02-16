@@ -80,6 +80,17 @@ public class ClientBehaviour : MonoBehaviour
                                 continue;
                         }
 
+                        if (reader.InstanceId != null)
+                        {
+                            var instanceId = stream.ReadInt(ref readerCtx);
+
+                            if (reader.Log)
+                                Debug.Log($"Instance ID: {instanceId} {reader.transform.name}");
+
+                            if (instanceId != reader.InstanceId.Value)
+                                continue;
+                        }
+
                         reader.Read(0, stream, ref readerCtx);
                     }
                 }
