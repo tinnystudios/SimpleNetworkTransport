@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class ChatNetReader : NetReader
 {
     public Text Label;
+    public bool AddText = true;
 
     public override void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context context)
     {
@@ -12,10 +13,17 @@ public class ChatNetReader : NetReader
 
         if (text.LengthInBytes > 0)
         {
-            if (Label.text.Length > 0)
-                Label.text += "\n";
+            if (AddText)
+            {
+                if (Label.text.Length > 0)
+                    Label.text += "\n";
 
-            Label.text += $"{connectionId} says: {text}";
+                Label.text += $"{connectionId} says: {text}";
+            }
+            else
+            {
+                Label.text = text.ToString();
+            }
         }
     }
 }
