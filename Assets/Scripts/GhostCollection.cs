@@ -69,18 +69,31 @@ public class GhostCollection : MonoBehaviour
 
     public void AddNewClientGhostToServer(NetworkConnection connection)
     {
-        // Making the ghost on the server side, basically it read position from the new connection
-        var player = Instantiate(GhostPrefab);
-        var positionReader = player.GetComponent<PositionNetReader>();
-        positionReader.ConnectionId = connection.InternalId;
-        positionReader.Id = 4;
-        positionReader.Target = player.transform;
-        Server.AddReader(positionReader);
+        var player = Instantiate(GhostPrefab, transform);
+        var readers = player.GetComponentsInChildren<NetReader>();
+        foreach (var reader in readers)
+        {
+            reader.ConnectionId = connection.InternalId;
+            Server.AddReader(reader);
+        }
 
-        // Sending the ghost on the client side, basically it send the new ghost position outwardly to all clients
-        var positionSender = player.GetComponent<PositionNetSender>();
-        positionSender.ConnectionId = connection.InternalId;
-        positionSender.Id = 4;
-        Server.AddSender(positionSender);
+        var senders = player.GetComponentsInChildren<NetSender>();
+        foreach (var sender in senders)
+        {
+            sender.ConnectionId = connection.InternalId;
+            Server.AddSender(sender);
+        }
+    }
+
+    public Ghost NewGhost(ClientBehaviour client, int connectionId)
+    {
+        var ghost = Instantiate(GhostPrefab, client.transform);
+        ghost.transform.name = $"Ghost: {connectionId}";
+
+        var reader = ghost.GetComponent<PositionNetReader>();
+        reader.ConnectionId = connectionId;
+
+        client.Readers.Add(reader);
+        return ghost;
     }
 }
