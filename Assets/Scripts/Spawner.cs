@@ -8,6 +8,7 @@ public class Spawner : MonoBehaviour
     public Server Server;
 
     public List<GhostPair> Ghosts;
+    public List<Ghost> Instances;
 
     public const int SpawnId = 10;
     public const int SpawnRequestId = 11;
@@ -18,6 +19,7 @@ public class Spawner : MonoBehaviour
         var instance = Instantiate(prefab, transform);
         instance.transform.position = position;
         instance.transform.rotation = rotation;
+        instance.PrefabId = prefabId;
 
         var instanceId = instance.GetInstanceID();
         var ownership = EOwnershipType.Server;
@@ -25,6 +27,8 @@ public class Spawner : MonoBehaviour
         // For now, having a connection means it's owner owned.
         if (connection != null)
         {
+            instance.ConnectionId = connection.Value.InternalId;
+
             foreach (var reader in instance.Readers)
             {
                 reader.InstanceId = instanceId;
@@ -51,6 +55,8 @@ public class Spawner : MonoBehaviour
             writer.Write(instanceId);
             Server.Write(writer, c);
         }
+
+        Instances.Add(instance);
     }
 
     public void SpawnInClient(int prefabId, int instanceId, int ownershipId, ClientBehaviour client)

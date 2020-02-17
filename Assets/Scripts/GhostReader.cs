@@ -11,22 +11,17 @@ public class GhostReader : NetReader
 
     public override void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context context)
     {
-        var str = stream.ReadString(ref context);
         var client = GetComponentInParent<ClientBehaviour>();
+        var length = stream.ReadInt(ref context);
 
-        if (string.IsNullOrEmpty(str.ToString()))
-            return;
+        Debug.Log($"Length: {length}");
 
-        var array = str.ToString().Split(',');
-
-        foreach (var val in array)
+        for (int i = 0; i < length; i++)
         {
-            var id = int.Parse(val);
+            var prefabId = stream.ReadInt(ref context);
+            var instanceId = stream.ReadInt(ref context);
 
-            if (id == ConnectionIdReader.ServerAssignedConnectionId)
-                return;
-
-            Debug.Log($"{client.name} added ghost: {id}");
+            GhostCollection.NewInClient(prefabId, instanceId, (int)EOwnershipType.Server, client);
         }
     }
 }
