@@ -20,8 +20,8 @@ public abstract class ServerBase : MonoBehaviour
         var endpoint = NetworkEndPoint.AnyIpv4;
         endpoint.Port = 9000;
 
-        //var endpoint = NetworkEndPoint.Parse("192.168.1.82", 9000);
-
+        //endpoint = NetworkEndPoint.Parse("192.168.1.82", 9000);
+        endpoint = NetworkEndPoint.Parse("13.211.83.187", 9000);
 
         if (m_Driver.Bind(endpoint) != 0)
             Debug.Log("Failed to bind to port 9000");

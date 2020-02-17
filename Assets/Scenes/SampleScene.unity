@@ -1432,6 +1432,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Client
       objectReference: {fileID: 0}
+    - target: {fileID: 1942728180213576056, guid: 42262d7b37d95064482548bb953ca05c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1942728180213576058, guid: 42262d7b37d95064482548bb953ca05c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1505,37 +1510,37 @@ PrefabInstance:
     - target: {fileID: 1942728180533515218, guid: 42262d7b37d95064482548bb953ca05c,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1942728180533515218, guid: 42262d7b37d95064482548bb953ca05c,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1942728180533515218, guid: 42262d7b37d95064482548bb953ca05c,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 29.9
       objectReference: {fileID: 0}
     - target: {fileID: 1942728181420992538, guid: 42262d7b37d95064482548bb953ca05c,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1942728181420992538, guid: 42262d7b37d95064482548bb953ca05c,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1942728181420992538, guid: 42262d7b37d95064482548bb953ca05c,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 111.54999
       objectReference: {fileID: 0}
     - target: {fileID: 1942728181420992538, guid: 42262d7b37d95064482548bb953ca05c,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 29.9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42262d7b37d95064482548bb953ca05c, type: 3}
