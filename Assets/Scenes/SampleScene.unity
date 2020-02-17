@@ -520,6 +520,7 @@ Transform:
   - {fileID: 556362410}
   - {fileID: 1517846448}
   - {fileID: 1449220654}
+  - {fileID: 609476410}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -639,11 +640,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 609476409}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.7058921, y: -0.56373, z: 2.254098}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1514020779}
-  m_RootOrder: 2
+  m_Father: {fileID: 443822474}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &609476411
 MonoBehaviour:
@@ -1677,7 +1678,6 @@ Transform:
   m_Children:
   - {fileID: 1015278076}
   - {fileID: 1657674162}
-  - {fileID: 609476410}
   m_Father: {fileID: 757945234}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2217,7 +2217,6 @@ GameObject:
   - component: {fileID: 2091145574}
   - component: {fileID: 2091145577}
   - component: {fileID: 2091145578}
-  - component: {fileID: 2091145576}
   m_Layer: 0
   m_Name: Client
   m_TagString: Untagged
@@ -2243,7 +2242,6 @@ MonoBehaviour:
   Readers:
   - {fileID: 2091145578}
   - {fileID: 2091145577}
-  - {fileID: 2091145576}
   - {fileID: 781951286}
   - {fileID: 1929015826}
 --- !u!4 &2091145575
@@ -2264,21 +2262,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2091145576
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2091145573}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6bc293041967d94f86489b83ac4ce01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Id: 99
-  Log: 0
-  GhostCollection: {fileID: 609476411}
 --- !u!114 &2091145577
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -31,13 +31,11 @@ public class Spawner : MonoBehaviour
                 Server.AddReader(reader);
             }
         }
-        else
+
+        foreach (var sender in instance.Senders)
         {
-            foreach (var sender in instance.Senders)
-            {
-                sender.InstanceId = instanceId;
-                Server.AddSender(sender);
-            }
+            sender.InstanceId = instanceId;
+            Server.AddSender(sender);
         }
 
         // If you are the server, notify all clients that a new object has been made
