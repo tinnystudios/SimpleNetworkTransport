@@ -5,9 +5,14 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public Rigidbody Rigidbody;
-    // Start is called before the first frame update
-    void Start()
+
+    private void Start()
     {
         Rigidbody.velocity = Vector3.right * 2;
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+
     }
 }

@@ -9,6 +9,5 @@ public class NewConnectionReader : NetReader
     {
         var id = stream.ReadInt(ref context);
         var client = GetComponentInParent<ClientBehaviour>();
-        GhostCollection.NewGhost(client, id);
     }
 }

@@ -10,10 +10,6 @@ public class PositionNetSender : NetSender
 
     public override DataStreamWriter Write(DataStreamWriter writer)
     {
-        // TODO This should happen when you send in client or server, not in here!
-        if (ConnectionId != null)
-            writer.Write(ConnectionId.Value);
-
         if (InstanceId != null)
             writer.Write(InstanceId.Value);
 

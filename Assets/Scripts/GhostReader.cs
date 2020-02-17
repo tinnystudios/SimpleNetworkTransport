@@ -28,7 +28,7 @@ public class GhostReader : NetReader
 
             Debug.Log($"{client.name} added ghost: {id}");
 
-            GhostCollection.NewGhost(client, id);
+            //GhostCollection.NewGhost(client, id);
         }
     }
 }

@@ -33,11 +33,19 @@ public class Server : ServerBase
     {
         foreach (var reader in Readers)
         {
+            var context = default(DataStreamReader.Context);
+
             if (reader.ConnectionId != null && reader.ConnectionId != connectionId)
                 continue;
 
-            var context = default(DataStreamReader.Context);
             var id = stream.ReadInt(ref context);
+
+            if (reader.InstanceId != null)
+            {
+                var instanceId = stream.ReadInt(ref context);
+                if (instanceId != reader.InstanceId)
+                    continue;
+            }
 
             if (id == reader.Id)
                 reader.Read(connectionId, stream, ref context);

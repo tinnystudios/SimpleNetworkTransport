@@ -22,10 +22,10 @@ public class ClientBehaviour : MonoBehaviour
     {
         m_Connection = default(NetworkConnection);
 
-        //var endpoint = NetworkEndPoint.LoopbackIpv4;
-        //endpoint.Port = 9000;
+        var endpoint = NetworkEndPoint.LoopbackIpv4;
+        endpoint.Port = 9000;
 
-        var endpoint = NetworkEndPoint.Parse("192.168.1.82", 9000);
+        //var endpoint = NetworkEndPoint.Parse("192.168.1.82", 9000);
         m_Connection = m_Driver.Connect(endpoint);
     }
 

@@ -9,7 +9,9 @@ public class GunController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            Spawner.RequestSpawn(9999, Client, transform.position, transform.rotation);
+            Spawner = Spawner ?? FindObjectOfType<Spawner>();
+            Client = Client ?? GetComponentInParent<ClientBehaviour>();
+            Spawner.RequestSpawn(1, Client, transform.position, transform.rotation);
         }
     }
 }

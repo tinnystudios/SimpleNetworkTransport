@@ -1,4 +1,5 @@
-﻿using Unity.Collections;
+﻿using System.Collections.Generic;
+using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine;
 
@@ -6,50 +7,75 @@ public class Spawner : MonoBehaviour
 {
     public Server Server;
 
-    // The prefab as a pair
-    public Ghost GhostPrefab;
-    public Ghost Prefab;
-
-    public Transform SpawnPoint;
+    public List<GhostPair> Ghosts;
 
     public const int SpawnId = 10;
     public const int SpawnRequestId = 11;
 
-    public void SpawnInServer(int prefabId, Vector3 position, Quaternion rotation)
+    public void SpawnInServer(int prefabId, Vector3 position, Quaternion rotation, NetworkConnection? connection = null)
     {
-        var instance = Instantiate(Prefab, transform);
+        var prefab = connection == null ? Ghosts[prefabId].OwnerPrefab : Ghosts[prefabId].GhostPrefab;
+        var instance = Instantiate(prefab, transform);
         instance.transform.position = position;
         instance.transform.rotation = rotation;
 
         var instanceId = instance.GetInstanceID();
+        var ownership = EOwnershipType.Server;
 
-        //instance.transform.position = SpawnPoint.position;
-
-        // The sender will automatically handle the positioning? 
-        foreach (var sender in instance.Senders)
+        // For now, having a connection means it's owner owned.
+        if (connection != null)
         {
-            sender.InstanceId = instanceId;
-            Server.AddSender(sender);
+            foreach (var reader in instance.Readers)
+            {
+                reader.InstanceId = instanceId;
+                Server.AddReader(reader);
+            }
+        }
+        else
+        {
+            foreach (var sender in instance.Senders)
+            {
+                sender.InstanceId = instanceId;
+                Server.AddSender(sender);
+            }
         }
 
         // If you are the server, notify all clients that a new object has been made
         foreach (var c in Server.Connections)
         {
+            if (connection != null)
+                ownership = c.InternalId == connection.Value.InternalId ? EOwnershipType.Owner : EOwnershipType.Server;
+
             var writer = new DataStreamWriter(1000000, Allocator.Temp);
             writer.Write(SpawnId);
             writer.Write(prefabId);
+            writer.Write((int)ownership);
             writer.Write(instanceId);
             Server.Write(writer, c);
         }
     }
 
-    public void SpawnInClient(int prefabId, int instanceId, ClientBehaviour client)
+    public void SpawnInClient(int prefabId, int instanceId, int ownershipId, ClientBehaviour client)
     {
-        var instance = Instantiate(GhostPrefab, client.transform);
-        foreach (var reader in instance.Readers)
+        var type = (EOwnershipType)ownershipId;
+        var prefab = type == EOwnershipType.Owner ? Ghosts[prefabId].OwnerPrefab : Ghosts[prefabId].GhostPrefab;
+        var instance = Instantiate(prefab, client.transform);
+
+        if (type == EOwnershipType.Owner)
         {
-            reader.InstanceId = instanceId;
-            client.Readers.Add(reader);
+            foreach (var sender in instance.Senders)
+            {
+                sender.InstanceId = instanceId;
+                client.Senders.Add(sender);
+            }
+        }
+        else
+        {
+            foreach (var reader in instance.Readers)
+            {
+                reader.InstanceId = instanceId;
+                client.Readers.Add(reader);
+            }
         }
     }
 
@@ -71,4 +97,10 @@ public class Spawner : MonoBehaviour
 
         client.Send(writer);
     }
+}
+
+public enum EOwnershipType
+{
+    Owner,
+    Server
 }

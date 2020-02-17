@@ -17,10 +17,11 @@ public abstract class ServerBase : MonoBehaviour
 
         m_Driver = new UdpNetworkDriver(new INetworkParameter[0]);
 
-        //var endpoint = NetworkEndPoint.AnyIpv4;
-        //endpoint.Port = 9000;
+        var endpoint = NetworkEndPoint.AnyIpv4;
+        endpoint.Port = 9000;
 
-        var endpoint = NetworkEndPoint.Parse("192.168.1.82", 9000);
+        //var endpoint = NetworkEndPoint.Parse("192.168.1.82", 9000);
+
 
         if (m_Driver.Bind(endpoint) != 0)
             Debug.Log("Failed to bind to port 9000");
