@@ -12,6 +12,8 @@ public class ClientBehaviour : MonoBehaviour
     public List<NetSender> Senders;
     public List<NetReader> Readers;
 
+    public NetworkConfig NetworkConfig;
+
     void Start ()
     {
         m_Driver = new UdpNetworkDriver(new INetworkParameter[0]);
@@ -22,11 +24,13 @@ public class ClientBehaviour : MonoBehaviour
     {
         m_Connection = default(NetworkConnection);
 
-        var endpoint = NetworkEndPoint.LoopbackIpv4;
-        endpoint.Port = 9000;
+        var endpoint = NetworkConfig.GetClientEndPoint();
+
+        //var endpoint = NetworkEndPoint.LoopbackIpv4;
+        //endpoint.Port = 9000;
 
         //endpoint = NetworkEndPoint.Parse("192.168.1.82", 9000);
-        endpoint = NetworkEndPoint.Parse("13.211.83.187", 9000);
+        //endpoint = NetworkEndPoint.Parse("13.211.83.187", 9000);
         m_Connection = m_Driver.Connect(endpoint);
     }
 
@@ -101,6 +105,12 @@ public class ClientBehaviour : MonoBehaviour
                 // At the moment this is to keep the client connected.
                 foreach (var sender in Senders)
                 {
+                    sender.CurrentFrame++;
+                    if (sender.CurrentFrame >= sender.UpdateFrame)
+                        sender.CurrentFrame = 0;
+                    else
+                        continue;
+
                     var writer = sender.GetNew();
                     writer.Write(sender.Id);
                     sender.Write(writer);

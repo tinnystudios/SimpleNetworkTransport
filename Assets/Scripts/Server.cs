@@ -55,6 +55,12 @@ public class Server : ServerBase
     {
         foreach (var sender in Senders)
         {
+            sender.CurrentFrame++;
+            if (sender.CurrentFrame >= sender.UpdateFrame)
+                sender.CurrentFrame = 0;
+            else
+                continue;
+
             var writer = sender.GetNew();
 
             writer.Write(sender.Id);
