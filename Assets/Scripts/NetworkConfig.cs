@@ -10,10 +10,6 @@ public class NetworkConfig : MonoBehaviour
         var endpoint = NetworkEndPoint.AnyIpv4;
         endpoint.Port = 9000;
 
-        //endpoint = NetworkEndPoint.Parse("192.168.1.82", 9000);
-        if(UseTableau)
-            endpoint = NetworkEndPoint.Parse("13.211.83.187", 9000);
-
         return endpoint;
     }
 
@@ -23,7 +19,7 @@ public class NetworkConfig : MonoBehaviour
         endpoint.Port = 9000;
 
         if (UseTableau)
-            endpoint = NetworkEndPoint.Parse("13.211.83.187", 9000);
+            endpoint = NetworkEndPoint.Parse("13.211.83.187", 9500);
 
         return endpoint;
     }
