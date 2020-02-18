@@ -8,9 +8,6 @@ public abstract class NetSender : MonoBehaviour
     public int? ConnectionId = null;
     public int? InstanceId;
 
-    public int UpdateFrame { get; set; } = 5;
-    public int CurrentFrame { get; set; }
-
     public abstract DataStreamWriter GetNew();
     public abstract DataStreamWriter Write(DataStreamWriter stream);
 }
