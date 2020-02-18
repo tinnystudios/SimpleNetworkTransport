@@ -11,6 +11,7 @@ public class ClientBehaviour : MonoBehaviour
 
     public List<NetSender> Senders;
     public List<NetReader> Readers;
+    public NetworkConfig Config;
 
     void Start ()
     {
@@ -21,12 +22,7 @@ public class ClientBehaviour : MonoBehaviour
     public void Connect()
     {
         m_Connection = default(NetworkConnection);
-
-        var endpoint = NetworkEndPoint.LoopbackIpv4;
-        endpoint.Port = 9000;
-
-        //endpoint = NetworkEndPoint.Parse("192.168.1.82", 9000);
-        endpoint = NetworkEndPoint.Parse("13.211.83.187", 9000);
+        var endpoint = Config.GetNetworkEndPoint();
         m_Connection = m_Driver.Connect(endpoint);
     }
 
@@ -101,6 +97,12 @@ public class ClientBehaviour : MonoBehaviour
                 // At the moment this is to keep the client connected.
                 foreach (var sender in Senders)
                 {
+                    sender.CurrentFrame++;
+                    if (sender.CurrentFrame >= sender.UpdateFrame)
+                        sender.CurrentFrame = 0;
+                    else
+                        continue;
+
                     var writer = sender.GetNew();
                     writer.Write(sender.Id);
                     sender.Write(writer);
