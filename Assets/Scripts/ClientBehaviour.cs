@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Networking.Transport;
 using System.Collections.Generic;
+using System.Collections;
 
 public class ClientBehaviour : MonoBehaviour
 {
@@ -14,24 +15,23 @@ public class ClientBehaviour : MonoBehaviour
 
     public NetworkConfig NetworkConfig;
 
+    private float _frame;
+
     void Start ()
     {
         m_Driver = new UdpNetworkDriver(new INetworkParameter[0]);
         Connect();
+
+        StartCoroutine(Run());
     }
 
     public void Connect()
     {
         m_Connection = default(NetworkConnection);
-
         var endpoint = NetworkConfig.GetClientEndPoint();
-
-        //var endpoint = NetworkEndPoint.LoopbackIpv4;
-        //endpoint.Port = 9000;
-
-        //endpoint = NetworkEndPoint.Parse("192.168.1.82", 9000);
-        //endpoint = NetworkEndPoint.Parse("13.211.83.187", 9000);
         m_Connection = m_Driver.Connect(endpoint);
+
+
     }
 
     public void OnDestroy()
@@ -43,6 +43,23 @@ public class ClientBehaviour : MonoBehaviour
     {
         m_Connection.Send(m_Driver, writer);
         writer.Dispose();
+    }
+
+    private IEnumerator Run()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(0.5F);
+
+            // At the moment this is to keep the client connected.
+            foreach (var sender in Senders)
+            {
+                var writer = sender.GetNew();
+                writer.Write(sender.Id);
+                sender.Write(writer);
+                Send(writer);
+            }
+        }
     }
 
     void Update()
@@ -78,15 +95,6 @@ public class ClientBehaviour : MonoBehaviour
                     var id = stream.ReadInt(ref readerCtx);
                     if (id == reader.Id)
                     {
-                        /*
-                        if (reader.ConnectionId != null)
-                        {
-                            var targetConnectionId = stream.ReadInt(ref readerCtx);
-                            if (targetConnectionId != reader.ConnectionId)
-                                continue;
-                        }
-                        */
-
                         if (reader.InstanceId != null)
                         {
                             var instanceId = stream.ReadInt(ref readerCtx);
@@ -100,21 +108,6 @@ public class ClientBehaviour : MonoBehaviour
 
                         reader.Read(0, stream, ref readerCtx);
                     }
-                }
-
-                // At the moment this is to keep the client connected.
-                foreach (var sender in Senders)
-                {
-                    sender.CurrentFrame++;
-                    if (sender.CurrentFrame >= sender.UpdateFrame)
-                        sender.CurrentFrame = 0;
-                    else
-                        continue;
-
-                    var writer = sender.GetNew();
-                    writer.Write(sender.Id);
-                    sender.Write(writer);
-                    Send(writer);
                 }
             }
             else if (cmd == NetworkEvent.Type.Disconnect)

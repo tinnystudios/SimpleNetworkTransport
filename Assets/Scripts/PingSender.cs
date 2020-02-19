@@ -5,7 +5,7 @@ public class PingSender : NetSender
 {
     public override DataStreamWriter GetNew()
     {
-        return new DataStreamWriter(100, Allocator.Temp);
+        return new DataStreamWriter(8, Allocator.Temp);
     }
 
     public override DataStreamWriter Write(DataStreamWriter writer)
