@@ -9,7 +9,7 @@ public class PositionNetReader : NetReader
         var x = (float)stream.ReadInt(ref context)/1000;
         var pos = Target.position;
         pos.x = x;
-
+        pos.y = 0.5F;
         Target.position = pos;
     }
 }

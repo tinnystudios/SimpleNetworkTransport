@@ -23,7 +23,7 @@ public class ConnectionIdSender : NetSender
 
     public override DataStreamWriter GetNew()
     {
-        return new DataStreamWriter(100000, Allocator.Temp);
+        return new DataStreamWriter(8, Allocator.Temp);
     }
 
     public override DataStreamWriter Write(DataStreamWriter stream)

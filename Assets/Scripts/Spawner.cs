@@ -48,7 +48,7 @@ public class Spawner : MonoBehaviour
             if (connection != null)
                 ownership = c.InternalId == connection.Value.InternalId ? EOwnershipType.Owner : EOwnershipType.Server;
 
-            var writer = new DataStreamWriter(1000000, Allocator.Temp);
+            var writer = new DataStreamWriter(16, Allocator.Temp);
             writer.Write(SpawnId);
             writer.Write(prefabId);
             writer.Write((int)ownership);
@@ -85,19 +85,23 @@ public class Spawner : MonoBehaviour
 
     public void RequestSpawn(int prefabId, ClientBehaviour client, Vector3 position, Quaternion rotation)
     {
-        var writer = new DataStreamWriter(10000, Allocator.Temp);
+        var writer = new DataStreamWriter(8, Allocator.Temp);
         writer.Write(SpawnRequestId);
         writer.Write(prefabId);
 
         // The server should make this instead.
+        /*
         writer.Write(position.x);
         writer.Write(position.y);
         writer.Write(position.z);
+        */
 
+        /*
         writer.Write(rotation.x);
         writer.Write(rotation.y);
         writer.Write(rotation.z);
         writer.Write(rotation.w);
+        */
 
         client.Send(writer);
     }

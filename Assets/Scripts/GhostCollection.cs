@@ -29,7 +29,7 @@ public class GhostCollection : MonoBehaviour
     public void AddConnectedGhostClientsToNewClient(NetworkConnection connection)
     {
         var length = Server.Connections.Length;
-        var writer = new DataStreamWriter(1000000, Allocator.Temp);
+        var writer = new DataStreamWriter(16, Allocator.Temp);
         writer.Write(AddPreviousGhostSenderId);
         writer.Write(length - 1);
 

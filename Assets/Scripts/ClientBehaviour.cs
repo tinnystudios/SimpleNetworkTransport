@@ -47,6 +47,8 @@ public class ClientBehaviour : MonoBehaviour
     {
         while (true)
         {
+            yield return new WaitUntil(() => m_Connected);
+
             yield return new WaitForSeconds(0.33F);
 
             // At the moment this is to keep the client connected.

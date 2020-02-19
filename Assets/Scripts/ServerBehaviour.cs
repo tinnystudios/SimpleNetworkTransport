@@ -11,11 +11,10 @@ public abstract class ServerBase : MonoBehaviour
     protected NativeList<NetworkConnection> m_Connections;
     public NetworkConfig NetworkConfig;
 
+    private int _frame;
+
     void Start ()
     {
-        if (ClientBuild)
-            return;
-
         m_Driver = new UdpNetworkDriver(new INetworkParameter[0]);
 
         var endpoint = NetworkConfig.GetServerEndPoint();
@@ -43,9 +42,6 @@ public abstract class ServerBase : MonoBehaviour
 
     void Update ()
     {
-        if (ClientBuild)
-            return;
-
         m_Driver.ScheduleUpdate().Complete();
 
         // CleanUpConnections
@@ -66,6 +62,8 @@ public abstract class ServerBase : MonoBehaviour
             Debug.Log($"New user connected: {c.InternalId}");
         }
 
+ 
+
         DataStreamReader stream;
         for (int i = 0; i < m_Connections.Length; i++)
         {
@@ -75,10 +73,23 @@ public abstract class ServerBase : MonoBehaviour
             NetworkEvent.Type cmd;
 
             var readerCtx = default(DataStreamReader.Context);
-            Send(ref m_Driver, m_Connections[i]);
+
+
 
             while ((cmd = m_Driver.PopEventForConnection(m_Connections[i], out stream)) != NetworkEvent.Type.Empty)
             {
+                if (m_Connections.Length > 0)
+                {
+                    var updateFrame = 20;
+                    _frame++;
+
+                    if (_frame >= updateFrame)
+                    {
+                        _frame = 0;
+                        Send(ref m_Driver, m_Connections[i]);
+                    }
+                }
+
                 if (cmd == NetworkEvent.Type.Data)
                 {
                     Read(i, stream, ref readerCtx);
