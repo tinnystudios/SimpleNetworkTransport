@@ -30,8 +30,6 @@ public class ClientBehaviour : MonoBehaviour
         m_Connection = default(NetworkConnection);
         var endpoint = NetworkConfig.GetClientEndPoint();
         m_Connection = m_Driver.Connect(endpoint);
-
-
     }
 
     public void OnDestroy()
@@ -49,7 +47,7 @@ public class ClientBehaviour : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(0.5F);
+            yield return new WaitForSeconds(0.33F);
 
             // At the moment this is to keep the client connected.
             foreach (var sender in Senders)
@@ -113,7 +111,6 @@ public class ClientBehaviour : MonoBehaviour
             else if (cmd == NetworkEvent.Type.Disconnect)
             {
                 Debug.Log("Client got disconnected from server");
-                Connect();
             }
         }
     }
