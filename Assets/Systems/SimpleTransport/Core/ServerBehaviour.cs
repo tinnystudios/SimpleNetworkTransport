@@ -86,7 +86,7 @@ public abstract class ServerBase : MonoBehaviour
                     //if (_frame >= updateFrame)
                     //{
                     //    _frame = 0;
-                        Send(ref m_Driver, m_Connections[i]);
+                        Write(ref m_Driver, m_Connections[i]);
                     //}
                 }
 
@@ -104,6 +104,6 @@ public abstract class ServerBase : MonoBehaviour
     }
 
     protected abstract void NewConnection(NetworkConnection connection);
-    protected abstract void Send(ref UdpNetworkDriver m_Driver, NetworkConnection networkConnection);
+    protected abstract void Write(ref UdpNetworkDriver m_Driver, NetworkConnection networkConnection);
     protected abstract void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context context);
 }

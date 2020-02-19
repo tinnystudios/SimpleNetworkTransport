@@ -51,7 +51,7 @@ public class Server : ServerBase
         }
     }
 
-    protected override void Send(ref UdpNetworkDriver m_Driver, NetworkConnection networkConnection)
+    protected override void Write(ref UdpNetworkDriver m_Driver, NetworkConnection networkConnection)
     {
         foreach (var sender in Senders)
         {

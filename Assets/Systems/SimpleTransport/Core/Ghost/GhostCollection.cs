@@ -29,7 +29,8 @@ public class GhostCollection : MonoBehaviour
     public void AddConnectedGhostClientsToNewClient(NetworkConnection connection)
     {
         var length = Server.Connections.Length;
-        var writer = new DataStreamWriter(16, Allocator.Temp);
+        var size = 8 + (8 * length);
+        var writer = new DataStreamWriter(size, Allocator.Temp);
         writer.Write(AddPreviousGhostSenderId);
         writer.Write(length - 1);
 
@@ -41,6 +42,7 @@ public class GhostCollection : MonoBehaviour
             var ghost = Spawner.Instances.SingleOrDefault(x => x.ConnectionId == c.InternalId);
             writer.Write(ghost.PrefabId);
             writer.Write(ghost.GetInstanceID());
+
         }
 
         Server.Driver.Send(NetworkPipeline.Null, connection, writer);
