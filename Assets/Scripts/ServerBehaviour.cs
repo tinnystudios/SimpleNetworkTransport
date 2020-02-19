@@ -80,14 +80,14 @@ public abstract class ServerBase : MonoBehaviour
             {
                 if (m_Connections.Length > 0)
                 {
-                    var updateFrame = 20;
-                    _frame++;
+                    //var updateFrame = 20;
+                    //_frame++;
 
-                    if (_frame >= updateFrame)
-                    {
-                        _frame = 0;
+                    //if (_frame >= updateFrame)
+                    //{
+                    //    _frame = 0;
                         Send(ref m_Driver, m_Connections[i]);
-                    }
+                    //}
                 }
 
                 if (cmd == NetworkEvent.Type.Data)

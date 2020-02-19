@@ -62,7 +62,6 @@ public class Server : ServerBase
 
             m_Driver.Send(NetworkPipeline.Null, networkConnection, writer);
             writer.Dispose();
-
         }
     }
 

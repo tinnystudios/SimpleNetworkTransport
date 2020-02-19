@@ -48,8 +48,7 @@ public class ClientBehaviour : MonoBehaviour
         while (true)
         {
             yield return new WaitUntil(() => m_Connected);
-
-            yield return new WaitForSeconds(0.33F);
+            yield return new WaitForSeconds(0.2f);
 
             // At the moment this is to keep the client connected.
             foreach (var sender in Senders)

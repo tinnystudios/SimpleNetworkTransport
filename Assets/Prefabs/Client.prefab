@@ -430,7 +430,7 @@ MonoBehaviour:
   - {fileID: 1942728180213576052}
   - {fileID: 1942728181592787243}
   - {fileID: 1942728180311480847}
-  - {fileID: 1942728180213576055}
+  NetworkConfig: {fileID: 0}
 --- !u!114 &1942728180213576052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -460,6 +460,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: 100
   Log: 0
+  Label: {fileID: 1942728179968789798}
   GhostCollection: {fileID: 0}
   ConnectionIdReader: {fileID: 1942728180213576052}
 --- !u!1 &1942728180311480845
