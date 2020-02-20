@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Unity.Networking.Transport;
 using UnityEngine;
 
@@ -8,6 +9,19 @@ public class AliveReader : NetReader
     public List<ConnectionAliveModel> ConnectionAlives = new List<ConnectionAliveModel>();
 
     private Dictionary<int, ConnectionAliveModel> _connectionAliveMap = new Dictionary<int, ConnectionAliveModel>();
+
+    private void Awake()
+    {
+        Server.OnClientConnected += AddConnection;
+    }
+
+    private void AddConnection(NetworkConnection c)
+    {
+        var connection = new ConnectionAliveModel() { InternalId = c.InternalId };
+        ConnectionAlives.Add(connection);
+
+        _connectionAliveMap.Add(connection.InternalId, connection);
+    }
 
     private void Update()
     {
@@ -27,11 +41,7 @@ public class AliveReader : NetReader
     public override void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context context)
     {
         var alive = stream.ReadByte(ref context);
-
-        if (!_connectionAliveMap.ContainsKey(connectionId))
-            _connectionAliveMap.Add(connectionId, new ConnectionAliveModel { InternalId = connectionId });
-        else 
-            _connectionAliveMap[connectionId].LastMessageReceived = Time.time;
+        _connectionAliveMap[connectionId].LastMessageReceived = Time.time;
     }
 }
 

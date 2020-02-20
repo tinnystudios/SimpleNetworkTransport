@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Unity.Collections;
 using System;
+using System.Linq;
 
 public class Server : ServerBase
 {
@@ -26,7 +27,7 @@ public class Server : ServerBase
 
     public void Disconnect(int internalId)
     {
-
+        OnClientDisconnected?.Invoke(m_Connections.SingleOrDefault(x => x.InternalId == internalId));
     }
 
     public void AddReader(NetReader reader)

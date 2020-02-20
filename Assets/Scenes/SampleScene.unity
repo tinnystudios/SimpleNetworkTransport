@@ -226,6 +226,7 @@ GameObject:
   - component: {fileID: 443822473}
   - component: {fileID: 443822475}
   - component: {fileID: 443822476}
+  - component: {fileID: 443822477}
   m_Layer: 0
   m_Name: Server
   m_TagString: Untagged
@@ -250,6 +251,7 @@ MonoBehaviour:
   Readers:
   - {fileID: 443822476}
   - {fileID: 556362409}
+  - {fileID: 443822477}
   Senders: []
 --- !u!4 &443822474
 Transform:
@@ -298,6 +300,21 @@ MonoBehaviour:
   Id: 11
   Log: 0
   Spawner: {fileID: 1657674163}
+--- !u!114 &443822477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443822472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e9a51e611d1cda4ab260e498ede650a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Id: 15
+  Log: 0
+  Server: {fileID: 443822473}
 --- !u!1 &556362408
 GameObject:
   m_ObjectHideFlags: 0
