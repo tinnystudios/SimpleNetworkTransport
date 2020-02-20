@@ -85,23 +85,18 @@ public class Spawner : MonoBehaviour
 
     public void RequestSpawn(int prefabId, ClientBehaviour client, Vector3 position, Quaternion rotation)
     {
-        var writer = new DataStreamWriter(8, Allocator.Temp);
+        var writer = new DataStreamWriter(36, Allocator.Temp);
         writer.Write(SpawnRequestId);
         writer.Write(prefabId);
 
-        // The server should make this instead.
-        /*
-        writer.Write(position.x);
-        writer.Write(position.y);
-        writer.Write(position.z);
-        */
+        writer.Write((int)(position.x * 10000));
+        writer.Write((int)(position.y * 10000));
+        writer.Write((int)(position.z * 10000));
 
-        /*
-        writer.Write(rotation.x);
-        writer.Write(rotation.y);
-        writer.Write(rotation.z);
-        writer.Write(rotation.w);
-        */
+        writer.Write((int)(rotation.x * 10000));
+        writer.Write((int)(rotation.y * 10000));
+        writer.Write((int)(rotation.z * 10000));
+        writer.Write((int)(rotation.w * 10000));
 
         client.Send(writer);
     }

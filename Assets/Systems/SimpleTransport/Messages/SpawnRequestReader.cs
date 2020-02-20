@@ -9,17 +9,15 @@ public class SpawnRequestReader : NetReader
         var prefabId = stream.ReadInt(ref context);
 
         var position = Vector3.one;
-        position.x = stream.ReadFloat(ref context);
-        position.y = stream.ReadFloat(ref context);
-        position.z = stream.ReadFloat(ref context);
+        position.x = (float)stream.ReadInt(ref context)/10000;
+        position.y = (float)stream.ReadInt(ref context)/10000;
+        position.z = (float)stream.ReadInt(ref context)/10000;
 
         var rotation = Quaternion.identity;
-        rotation.x = stream.ReadFloat(ref context);
-        rotation.y = stream.ReadFloat(ref context);
-        rotation.z = stream.ReadFloat(ref context);
-        rotation.w = stream.ReadFloat(ref context);
-
-        Debug.Log(position);
+        rotation.y = (float)stream.ReadInt(ref context)/10000;
+        rotation.z = (float)stream.ReadInt(ref context)/10000;
+        rotation.x = (float)stream.ReadInt(ref context)/10000;
+        rotation.w = (float)stream.ReadInt(ref context)/10000;
 
         Spawner.SpawnInServer(prefabId, position, rotation);
     }

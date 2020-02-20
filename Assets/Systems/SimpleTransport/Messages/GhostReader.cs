@@ -1,13 +1,10 @@
 ﻿using Unity.Networking.Transport;
-using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
 /// This is read when a connection you do not know of enters.
 /// </summary>
 public class GhostReader : NetReader
 {
-    public Text Label;
     public GhostCollection GhostCollection;
     public ConnectionIdReader ConnectionIdReader;
 
@@ -22,8 +19,6 @@ public class GhostReader : NetReader
             var instanceId = stream.ReadInt(ref context);
 
             GhostCollection.NewInClient(prefabId, instanceId, (int)EOwnershipType.Server, client);
-
-            Label.text += $"Making: {prefabId} with Instance ID: {instanceId}";
         }
     }
 }

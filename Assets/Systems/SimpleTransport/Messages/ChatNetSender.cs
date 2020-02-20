@@ -1,4 +1,5 @@
-﻿using Unity.Collections;
+﻿using System.Text;
+using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine.UI;
 
@@ -9,12 +10,15 @@ public class ChatNetSender : NetSender
 
     public override DataStreamWriter GetNew()
     {
-        return new DataStreamWriter(100000, Allocator.Temp);
+        byte[] bytes = Encoding.ASCII.GetBytes(InputField.text);
+        return new DataStreamWriter(bytes.Length + 8, Allocator.Temp);
     }
 
     public override DataStreamWriter Write(DataStreamWriter writer)
     {
-        writer.WriteString(InputField.text);
+        byte[] bytes = Encoding.ASCII.GetBytes(InputField.text);
+        writer.Write(bytes.Length);
+        writer.Write(bytes);
         return writer;
     }
 

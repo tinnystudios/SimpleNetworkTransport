@@ -70,4 +70,13 @@ public class Server : ServerBase
         m_Driver.Send(NetworkPipeline.Null, connection, writer);
         writer.Dispose();
     }
+
+    public void WriteToAllConnections(DataStreamWriter writer) 
+    {
+        foreach (var connection in m_Connections) 
+        {
+            m_Driver.Send(NetworkPipeline.Null, connection, writer);
+            writer.Dispose();
+        }
+    }
 }

@@ -232,7 +232,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &443822473
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -249,6 +249,7 @@ MonoBehaviour:
   NetworkConfig: {fileID: 1536175138}
   Readers:
   - {fileID: 443822476}
+  - {fileID: 556362409}
   Senders: []
 --- !u!4 &443822474
 Transform:
@@ -307,7 +308,6 @@ GameObject:
   m_Component:
   - component: {fileID: 556362410}
   - component: {fileID: 556362409}
-  - component: {fileID: 556362411}
   m_Layer: 0
   m_Name: Chat
   m_TagString: Untagged
@@ -330,7 +330,7 @@ MonoBehaviour:
   Id: 5
   Log: 0
   Label: {fileID: 1040641602}
-  AddText: 1
+  Server: {fileID: 443822473}
 --- !u!4 &556362410
 Transform:
   m_ObjectHideFlags: 0
@@ -345,20 +345,6 @@ Transform:
   m_Father: {fileID: 443822474}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &556362411
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 556362408}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2babc1b0055809749a049760bd191835, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Id: 5
-  Label: {fileID: 1040641602}
 --- !u!1 &609476409
 GameObject:
   m_ObjectHideFlags: 0
@@ -1034,7 +1020,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bf18e8fdee12a644aa7c2c22b275297, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseTableau: 1
+  UseTableau: 0
 --- !u!1 &1568233939
 GameObject:
   m_ObjectHideFlags: 0
