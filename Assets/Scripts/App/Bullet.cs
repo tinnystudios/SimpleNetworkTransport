@@ -8,7 +8,7 @@ public class Bullet : MonoBehaviour
 
     private void Start()
     {
-        Rigidbody.velocity = Vector3.right * 2;
+        Rigidbody.velocity = transform.forward * 5;
     }
 
     private void OnTriggerEnter(Collider collider)

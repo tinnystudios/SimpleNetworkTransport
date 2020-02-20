@@ -1,4 +1,5 @@
-﻿using Unity.Networking.Transport;
+﻿using System;
+using Unity.Networking.Transport;
 using UnityEngine;
 
 public class SpawnRequestReader : NetReader
@@ -8,16 +9,18 @@ public class SpawnRequestReader : NetReader
     {
         var prefabId = stream.ReadInt(ref context);
 
-        var position = Vector3.one;
-        position.x = (float)stream.ReadInt(ref context)/10000;
-        position.y = (float)stream.ReadInt(ref context)/10000;
-        position.z = (float)stream.ReadInt(ref context)/10000;
+        byte[] buff = stream.ReadBytesAsArray(ref context, sizeof(float) * 7);
+        Vector3 position = Vector3.zero;
+
+        position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
+        position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
+        position.z = BitConverter.ToSingle(buff, 2 * sizeof(float));
 
         var rotation = Quaternion.identity;
-        rotation.y = (float)stream.ReadInt(ref context)/10000;
-        rotation.z = (float)stream.ReadInt(ref context)/10000;
-        rotation.x = (float)stream.ReadInt(ref context)/10000;
-        rotation.w = (float)stream.ReadInt(ref context)/10000;
+        rotation.x = BitConverter.ToSingle(buff, 3 * sizeof(float));
+        rotation.y = BitConverter.ToSingle(buff, 4 * sizeof(float));
+        rotation.z = BitConverter.ToSingle(buff, 5 * sizeof(float));
+        rotation.w = BitConverter.ToSingle(buff, 6 * sizeof(float));
 
         Spawner.SpawnInServer(prefabId, position, rotation);
     }

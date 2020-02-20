@@ -11,7 +11,9 @@ public class GunController : MonoBehaviour
         {
             Spawner = Spawner ?? FindObjectOfType<Spawner>();
             Client = Client ?? GetComponentInParent<ClientBehaviour>();
-            Spawner.RequestSpawn(1, Client, transform.position, transform.rotation);
+
+            var pos = transform.position + transform.forward * 1.0F;
+            Spawner.RequestSpawn(1, Client, pos, transform.rotation);
         }
     }
 }

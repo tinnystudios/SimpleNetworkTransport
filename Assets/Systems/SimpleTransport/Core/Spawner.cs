@@ -129,14 +129,17 @@ public class Spawner : MonoBehaviour
         writer.Write(SpawnRequestId);
         writer.Write(prefabId);
 
-        writer.Write((int)(position.x * 10000));
-        writer.Write((int)(position.y * 10000));
-        writer.Write((int)(position.z * 10000));
+        byte[] buff = new byte[sizeof(float) * 7];
+        Buffer.BlockCopy(BitConverter.GetBytes(position.x), 0, buff, 0 * sizeof(float), sizeof(float));
+        Buffer.BlockCopy(BitConverter.GetBytes(position.y), 0, buff, 1 * sizeof(float), sizeof(float));
+        Buffer.BlockCopy(BitConverter.GetBytes(position.z), 0, buff, 2 * sizeof(float), sizeof(float));
 
-        writer.Write((int)(rotation.x * 10000));
-        writer.Write((int)(rotation.y * 10000));
-        writer.Write((int)(rotation.z * 10000));
-        writer.Write((int)(rotation.w * 10000));
+        Buffer.BlockCopy(BitConverter.GetBytes(rotation.x), 0, buff, 3 * sizeof(float), sizeof(float));
+        Buffer.BlockCopy(BitConverter.GetBytes(rotation.y), 0, buff, 4 * sizeof(float), sizeof(float));
+        Buffer.BlockCopy(BitConverter.GetBytes(rotation.z), 0, buff, 5 * sizeof(float), sizeof(float));
+        Buffer.BlockCopy(BitConverter.GetBytes(rotation.w), 0, buff, 6 * sizeof(float), sizeof(float));
+
+        writer.Write(buff);
 
         client.Send(writer);
     }
