@@ -9,4 +9,5 @@ public class Ghost : MonoBehaviour
 
     public int? ConnectionId { get; set; }
     public int PrefabId { get; set; }
+    public int InstanceId { get; set; }
 }

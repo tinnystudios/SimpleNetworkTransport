@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
 using Unity.Networking.Transport;
@@ -12,8 +13,10 @@ public class Spawner : MonoBehaviour
     public List<Ghost> Instances;
 
     public const int SpawnId = 10;
+
     public const int SpawnRequestId = 11;
     public const int DespawnRequestId = 12;
+    public const int DespawnClientRequestId = 13;
 
     public void SpawnInServer(int prefabId, Vector3 position, Quaternion rotation, NetworkConnection? connection = null)
     {
@@ -83,16 +86,43 @@ public class Spawner : MonoBehaviour
                 client.Readers.Add(reader);
             }
         }
+
+        instance.InstanceId = instanceId;
+        Instances.Add(instance);
+    }
+
+    public void DespawnInClient(int instanceId, Client client)
+    {
+        for (int i = 0; i < Instances.Count; i++)
+        {
+            if (Instances[i].InstanceId == instanceId) {
+                client.ClearReferences(instanceId);
+
+                Destroy(Instances[i].gameObject);
+                Instances.RemoveAt(i);
+                break;
+            }
+        }
     }
 
     public void DespawnInServer(int instanceId) 
     {
         var instance = Instances.SingleOrDefault(x => x.GetInstanceID() == instanceId);
+        Instances.Remove(instance);
+
         Server.ClearReferences(instanceId);
         Destroy(instance.gameObject);
+
+        foreach (var connection in Server.Connections)
+        {
+            var writer = new DataStreamWriter(8, Allocator.Temp);
+            writer.Write(DespawnClientRequestId);
+            writer.Write(instanceId);
+            Server.Write(writer, connection);
+        }
     }
 
-    // Requests goes to the server
+    // Client requesting to spawn
     public void RequestSpawn(int prefabId, ClientBehaviour client, Vector3 position, Quaternion rotation)
     {
         var writer = new DataStreamWriter(36, Allocator.Temp);
@@ -111,6 +141,7 @@ public class Spawner : MonoBehaviour
         client.Send(writer);
     }
 
+    // Client requesting to despawn
     public void RequestDespawn(int instanceId, ClientBehaviour client) 
     {
         var writer = new DataStreamWriter(8, Allocator.Temp);

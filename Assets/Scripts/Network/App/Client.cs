@@ -40,4 +40,25 @@ public class Client : ClientBehaviour
             }
         }
     }
+
+    public void ClearReferences(int instanceId)
+    {
+        for (int i = 0; i < Senders.Count; i++)
+        {
+            if (Senders[i].InstanceId == instanceId)
+            {
+                Senders.RemoveAt(i);
+                i--;
+            }
+        }
+
+        for (int i = 0; i < Readers.Count; i++)
+        {
+            if (Readers[i].InstanceId == instanceId)
+            {
+                Readers.RemoveAt(i);
+                i--;
+            }
+        }
+    }
 }
