@@ -8,14 +8,20 @@ public class Server : ServerBase
     public List<NetReader> Readers;
     public List<NetSender> Senders;
 
-    public Action<NetworkConnection> OnNewConnection;
+    public Action<NetworkConnection> OnClientConnected;
+    public Action<NetworkConnection> OnClientDisconnected;
 
     public UdpNetworkDriver Driver => m_Driver;
     public NativeList<NetworkConnection> Connections => m_Connections;
 
-    protected override void NewConnection(NetworkConnection connection)
+    protected override void ClientConnected(NetworkConnection connection)
     {
-        OnNewConnection?.Invoke(connection);
+        OnClientConnected?.Invoke(connection);
+    }
+
+    protected override void ClientDisconnected(NetworkConnection connection)
+    {
+        OnClientDisconnected?.Invoke(connection);
     }
 
     public void AddReader(NetReader reader)
@@ -78,5 +84,14 @@ public class Server : ServerBase
             m_Driver.Send(NetworkPipeline.Null, connection, writer);
             writer.Dispose();
         }
+    }
+
+    public void ClearReferences(int instanceId) 
+    {
+        foreach (var s in Senders) 
+            Senders.Remove(s);
+
+        foreach (var r in Readers)
+            Readers.Remove(r);
     }
 }

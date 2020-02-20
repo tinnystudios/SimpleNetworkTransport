@@ -56,7 +56,7 @@ public abstract class ServerBase : MonoBehaviour
         while ((c = m_Driver.Accept()) != default(NetworkConnection))
         {
             m_Connections.Add(c);
-            NewConnection(c);
+            ClientConnected(c);
             Debug.Log($"New user connected: {c.InternalId}");
         }
 
@@ -82,13 +82,16 @@ public abstract class ServerBase : MonoBehaviour
                 else if (cmd == NetworkEvent.Type.Disconnect)
                 {
                     Debug.Log("Client disconnected from server");
+
+                    ClientDisconnected(m_Connections[i]);
                     m_Connections[i] = default(NetworkConnection);
                 }
             }
         }
     }
 
-    protected abstract void NewConnection(NetworkConnection connection);
+    protected abstract void ClientDisconnected(NetworkConnection connection);
+    protected abstract void ClientConnected(NetworkConnection connection);
     protected abstract void Write(ref UdpNetworkDriver m_Driver, NetworkConnection networkConnection);
     protected abstract void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context context);
 }

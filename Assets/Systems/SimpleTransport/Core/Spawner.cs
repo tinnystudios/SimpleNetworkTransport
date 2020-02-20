@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class Spawner : MonoBehaviour
 
     public const int SpawnId = 10;
     public const int SpawnRequestId = 11;
+    public const int DespawnRequestId = 12;
 
     public void SpawnInServer(int prefabId, Vector3 position, Quaternion rotation, NetworkConnection? connection = null)
     {
@@ -83,6 +85,14 @@ public class Spawner : MonoBehaviour
         }
     }
 
+    public void DespawnInServer(int instanceId) 
+    {
+        var instance = Instances.SingleOrDefault(x => x.GetInstanceID() == instanceId);
+        Server.ClearReferences(instanceId);
+        Destroy(instance.gameObject);
+    }
+
+    // Requests goes to the server
     public void RequestSpawn(int prefabId, ClientBehaviour client, Vector3 position, Quaternion rotation)
     {
         var writer = new DataStreamWriter(36, Allocator.Temp);
@@ -100,10 +110,12 @@ public class Spawner : MonoBehaviour
 
         client.Send(writer);
     }
-}
 
-public enum EOwnershipType
-{
-    Owner,
-    Server
+    public void RequestDespawn(int instanceId, ClientBehaviour client) 
+    {
+        var writer = new DataStreamWriter(8, Allocator.Temp);
+        writer.Write(DespawnRequestId);
+        writer.Write(instanceId);
+        client.Send(writer);
+    }
 }

@@ -2,6 +2,7 @@
 using Unity.Collections;
 using UnityEngine;
 using Unity.Networking.Transport;
+using System;
 
 public class GhostCollection : MonoBehaviour
 {
@@ -12,10 +13,20 @@ public class GhostCollection : MonoBehaviour
 
     private void Awake()
     {
-        Server.OnNewConnection += OnNewConnection;
+        Server.OnClientConnected += OnClientConnected;
+        Server.OnClientDisconnected += OnDisconnected;
     }
 
-    private void OnNewConnection(NetworkConnection connection)
+    private void OnDisconnected(NetworkConnection connection)
+    {
+        var instances = Spawner.Instances.Where(x => x.ConnectionId == connection.InternalId);
+        foreach (var instance in instances) 
+        {
+            Spawner.DespawnInServer(instance.GetInstanceID());
+        }
+    }
+
+    private void OnClientConnected(NetworkConnection connection)
     {
         Spawner.SpawnInServer(0, new Vector3(0, 3, 0), Quaternion.identity, connection);
         AddConnectedGhostClientsToNewClient(connection);

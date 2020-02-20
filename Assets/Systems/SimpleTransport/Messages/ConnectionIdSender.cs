@@ -10,7 +10,7 @@ public class ConnectionIdSender : NetSender
 
     private void Awake()
     {
-        Server.OnNewConnection += OnNewConnection;
+        Server.OnClientConnected += OnNewConnection;
     }
 
     private void OnNewConnection(NetworkConnection connection)
