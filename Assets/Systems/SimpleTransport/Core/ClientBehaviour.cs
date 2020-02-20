@@ -15,7 +15,7 @@ public abstract class ClientBehaviour : MonoBehaviour
     public NetworkConfig NetworkConfig;
 
     public abstract void SendLoop();
-    public abstract void Write(DataStreamReader stream);
+    public abstract void Read(DataStreamReader stream);
 
     void Start ()
     {
@@ -42,7 +42,7 @@ public abstract class ClientBehaviour : MonoBehaviour
             }
             else if (cmd == NetworkEvent.Type.Data)
             {
-                Write(stream);
+                Read(stream);
             }
             else if (cmd == NetworkEvent.Type.Disconnect)
             {

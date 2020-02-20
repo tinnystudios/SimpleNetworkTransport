@@ -24,6 +24,11 @@ public class Server : ServerBase
         OnClientDisconnected?.Invoke(connection);
     }
 
+    public void Disconnect(int internalId)
+    {
+
+    }
+
     public void AddReader(NetReader reader)
     {
         Readers.Add(reader);

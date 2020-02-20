@@ -15,7 +15,7 @@ public class Client : ClientBehaviour
         }
     }
 
-    public override void Write(DataStreamReader stream)
+    public override void Read(DataStreamReader stream)
     {
         var readers = new List<NetReader>(Readers);
         foreach (var reader in readers)

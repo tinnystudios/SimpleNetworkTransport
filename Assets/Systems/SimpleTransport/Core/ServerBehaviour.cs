@@ -47,6 +47,7 @@ public abstract class ServerBase : MonoBehaviour
         {
             if (!m_Connections[i].IsCreated)
             {
+                Debug.Log($"Connection {i} has been cleaned up");
                 m_Connections.RemoveAtSwapBack(i);
                 --i;
             }
@@ -72,8 +73,6 @@ public abstract class ServerBase : MonoBehaviour
 
             while ((cmd = m_Driver.PopEventForConnection(m_Connections[i], out stream)) != NetworkEvent.Type.Empty)
             {
-                if (m_Connections.Length > 0)
-                    Write(ref m_Driver, m_Connections[i]);
 
                 if (cmd == NetworkEvent.Type.Data)
                 {
@@ -86,6 +85,9 @@ public abstract class ServerBase : MonoBehaviour
                     ClientDisconnected(m_Connections[i]);
                     m_Connections[i] = default(NetworkConnection);
                 }
+
+                if (m_Connections.Length > 0)
+                    Write(ref m_Driver, m_Connections[i]);
             }
         }
     }
