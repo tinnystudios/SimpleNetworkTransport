@@ -17,13 +17,12 @@ public class GhostCollection : MonoBehaviour
         Server.OnClientDisconnected += OnDisconnected;
     }
 
-    private void OnDisconnected(NetworkConnection connection)
+    private void OnDisconnected(int id)
     {
-        var instances = Spawner.Instances.Where(x => x.ConnectionId == connection.InternalId);
-        foreach (var instance in instances) 
-        {
+        var instances = Spawner.Instances.Where(x => x.ConnectionId == id).ToList();
+
+        foreach(var instance in instances)
             Spawner.DespawnInServer(instance.GetInstanceID());
-        }
     }
 
     private void OnClientConnected(NetworkConnection connection)

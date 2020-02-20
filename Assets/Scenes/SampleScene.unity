@@ -312,7 +312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e9a51e611d1cda4ab260e498ede650a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Id: 15
+  Id: 9999
   Log: 0
   Server: {fileID: 443822473}
 --- !u!1 &556362408
@@ -407,6 +407,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Server: {fileID: 443822473}
   Spawner: {fileID: 1657674163}
+--- !u!1 &703104384 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1942728180213576056, guid: 42262d7b37d95064482548bb953ca05c,
+    type: 3}
+  m_PrefabInstance: {fileID: 2021784718570954970}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &703104385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 703104384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f2375c65b29b524cbac94238fdab2ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Id: 9999
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1323,8 +1342,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2021784717687814588, guid: 42262d7b37d95064482548bb953ca05c,
         type: 3}
+      propertyPath: Senders.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2021784717687814588, guid: 42262d7b37d95064482548bb953ca05c,
+        type: 3}
       propertyPath: NetworkConfig
       value: 
       objectReference: {fileID: 1536175138}
+    - target: {fileID: 2021784717687814588, guid: 42262d7b37d95064482548bb953ca05c,
+        type: 3}
+      propertyPath: Senders.Array.data[1]
+      value: 
+      objectReference: {fileID: 703104385}
+    - target: {fileID: 2021784717687814588, guid: 42262d7b37d95064482548bb953ca05c,
+        type: 3}
+      propertyPath: Senders.Array.data[0]
+      value: 
+      objectReference: {fileID: 703104385}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42262d7b37d95064482548bb953ca05c, type: 3}

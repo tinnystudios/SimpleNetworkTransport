@@ -31,6 +31,7 @@ public class AliveReader : NetReader
             var timeElapsed = Time.time - connection.LastMessageReceived;
             if (timeElapsed > 3) 
             {
+                Debug.Log("Connection timeout");
                 Server.Disconnect(connection.InternalId);
                 ConnectionAlives.Remove(connection);
                 i--;
@@ -40,7 +41,7 @@ public class AliveReader : NetReader
 
     public override void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context context)
     {
-        var alive = stream.ReadByte(ref context);
+        var alive = stream.ReadInt(ref context);
         _connectionAliveMap[connectionId].LastMessageReceived = Time.time;
     }
 }

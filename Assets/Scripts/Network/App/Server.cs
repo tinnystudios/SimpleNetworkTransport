@@ -10,7 +10,7 @@ public class Server : ServerBase
     public List<NetSender> Senders;
 
     public Action<NetworkConnection> OnClientConnected;
-    public Action<NetworkConnection> OnClientDisconnected;
+    public Action<int> OnClientDisconnected;
 
     public UdpNetworkDriver Driver => m_Driver;
     public NativeList<NetworkConnection> Connections => m_Connections;
@@ -20,14 +20,19 @@ public class Server : ServerBase
         OnClientConnected?.Invoke(connection);
     }
 
-    protected override void ClientDisconnected(NetworkConnection connection)
-    {
-        OnClientDisconnected?.Invoke(connection);
-    }
-
     public void Disconnect(int internalId)
     {
-        OnClientDisconnected?.Invoke(m_Connections.SingleOrDefault(x => x.InternalId == internalId));
+        for (int i = 0; i < m_Connections.Length; i++)
+        {
+            if (m_Connections[i].InternalId == internalId)
+            {
+                m_Driver.Disconnect(m_Connections[i]);
+                ClearReferences(internalId);
+                break;
+            }
+        }
+
+        OnClientDisconnected?.Invoke(internalId);
     }
 
     public void AddReader(NetReader reader)
@@ -94,10 +99,22 @@ public class Server : ServerBase
 
     public void ClearReferences(int instanceId) 
     {
-        foreach (var s in Senders) 
-            Senders.Remove(s);
+        for (int i = 0; i < Senders.Count; i++)
+        {
+            if (Senders[i].InstanceId == instanceId)
+            {
+                Senders.RemoveAt(i);
+                i--;
+            }
+        }
 
-        foreach (var r in Readers)
-            Readers.Remove(r);
+        for (int i = 0; i < Readers.Count; i++)
+        {
+            if (Readers[i].InstanceId == instanceId)
+            {
+                Readers.RemoveAt(i);
+                i--;
+            }
+        }
     }
 }
