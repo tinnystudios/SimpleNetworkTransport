@@ -1,4 +1,5 @@
-﻿using Unity.Collections;
+﻿using System;
+using Unity.Collections;
 using Unity.Networking.Transport;
 
 public class PositionNetSender : NetSender
@@ -10,13 +11,12 @@ public class PositionNetSender : NetSender
         if (InstanceId != null)
             writer.Write(InstanceId.Value);
 
-        var x = transform.position.x * 10000;
-        var y = transform.position.y * 10000;
-        var z = transform.position.z * 10000;
+        byte[] buff = new byte[sizeof(float) * 3];
+        Buffer.BlockCopy(BitConverter.GetBytes(transform.position.x), 0, buff, 0 * sizeof(float), sizeof(float));
+        Buffer.BlockCopy(BitConverter.GetBytes(transform.position.y), 0, buff, 1 * sizeof(float), sizeof(float));
+        Buffer.BlockCopy(BitConverter.GetBytes(transform.position.z), 0, buff, 2 * sizeof(float), sizeof(float));
 
-        writer.Write((int)x);
-        writer.Write((int)y);
-        writer.Write((int)z);
+        writer.Write(buff);
 
         return writer;
     }

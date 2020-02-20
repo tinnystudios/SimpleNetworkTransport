@@ -1,4 +1,5 @@
-﻿using Unity.Networking.Transport;
+﻿using System;
+using Unity.Networking.Transport;
 using UnityEngine;
 
 public class PositionNetReader : NetReader
@@ -6,15 +7,13 @@ public class PositionNetReader : NetReader
     public Transform Target;
     public override void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context context)
     {
-        var x = (float)stream.ReadInt(ref context)/10000;
-        var y = (float)stream.ReadInt(ref context)/10000;
-        var z = (float)stream.ReadInt(ref context)/10000;
+        byte[] buff = stream.ReadBytesAsArray(ref context, 12);
+        Vector3 vect = Vector3.zero;
 
-        var pos = Target.position;
-        pos.x = x;
-        pos.y = y;
-        pos.z = z;
+        vect.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
+        vect.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
+        vect.z = BitConverter.ToSingle(buff, 2 * sizeof(float));
 
-        Target.position = Vector3.Lerp(Target.position, pos, 8 * Time.deltaTime);
+        Target.position = vect;
     }
 }
