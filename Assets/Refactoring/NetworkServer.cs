@@ -27,8 +27,12 @@ namespace SimpleTransport
         {
             var readerId = stream.ReadInt(ref context);
             //Debug.Log($"Reading: {readerId}");
-
+            
             var reader = Readers.SingleOrDefault(x => x.Id == readerId);
+
+            if (reader.ConnectionId != null)
+                stream.ReadInt(ref context);
+
             reader.Read(stream, ref context);
         }
 

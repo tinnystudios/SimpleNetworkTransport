@@ -11,8 +11,6 @@ namespace SimpleTransport
 
         public override void Read(DataStreamReader reader, ref DataStreamReader.Context context)
         {
-            var con = reader.ReadInt(ref context);
-
             byte[] buff = reader.ReadBytesAsArray(ref context, sizeof(float) * 7);
             Vector3 vect = Vector3.zero;
 
