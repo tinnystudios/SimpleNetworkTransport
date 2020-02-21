@@ -27,16 +27,27 @@ namespace SimpleTransport
         {
             var readerId = stream.ReadInt(ref context);
             //Debug.Log($"Reading: {readerId}");
-            
-            var reader = Readers.SingleOrDefault(x => x.Id == readerId);
 
-            if (reader.InstanceId != null)
-                stream.ReadInt(ref context);
+            foreach (var reader in Readers)
+            {
+                if (reader.Id != readerId)
+                    continue;
 
-            if (reader.ConnectionId != null)
-                stream.ReadInt(ref context);
+                if (reader.ConnectionId != null)
+                {
+                    var conId = stream.ReadInt(ref context);
+                }
 
-            reader.Read(stream, ref context);
+                if (reader.InstanceId != null)
+                {
+                    var instanceId = stream.ReadInt(ref context);
+                    Debug.Log("instanceID " + instanceId);
+                    if (reader.InstanceId != instanceId)
+                        continue;
+                }
+
+                reader.Read(stream, ref context);
+            }
         }
 
         private void CleanReaders(int connectionId)
