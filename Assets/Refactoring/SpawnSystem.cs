@@ -73,9 +73,11 @@ namespace SimpleTransport
 
                 var spawnWriter = new SpawnRPC().CreateWriter(spawnRPCData);
                 Server.Write(spawnWriter, c);
-            }
 
-            // TODO Get the components
+
+                // TODO Add all other ones too
+
+            }
 
             // TODO Broadcast this ghost position to all clients
 
