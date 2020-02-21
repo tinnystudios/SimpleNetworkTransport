@@ -911,18 +911,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1657674161}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4872d1208dc0a8d43b2d1ef7b9cf0380, type: 3}
+  m_Script: {fileID: 11500000, guid: 3308e46a5efed204cbaa7b73efea1dd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Server: {fileID: 0}
+  Server: {fileID: 443822473}
   Ghosts:
   - GhostPrefab: {fileID: 6666231392884897517, guid: 817dd72ef55a3104c849fc0c3de32f36,
       type: 3}
     OwnerPrefab: {fileID: -1928233420292765084, guid: 77f5a3abc26403a4299bc44d5b8aa499,
-      type: 3}
-  - GhostPrefab: {fileID: 1053165355863423799, guid: 0a526fcb62afbf64795b434bac3f4cd0,
-      type: 3}
-    OwnerPrefab: {fileID: 5192047464567092556, guid: bbc43ef09edcf9443aaa43bc18cab114,
       type: 3}
   Instances: []
 --- !u!1 &1669755472

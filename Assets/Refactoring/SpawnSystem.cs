@@ -38,7 +38,18 @@ namespace SimpleTransport
             {
                 instance.InstanceId = instanceId;
                 instance.ConnectionId = connection.Value.InternalId;
-                // TODO Add Position Readers, keep this modular as components though, tricky!
+
+                var transformRPC = new TransformRPC
+                {
+                    Data = new TransformRPCData
+                    {
+                        Target = instance.transform,
+                    },
+                    ConnectionId = connection.Value.InternalId,
+                    InstanceId = instanceId,
+                };
+
+                Server.AddReader(transformRPC);
             }
 
             // Broadcast to all clients to make this object
@@ -58,6 +69,8 @@ namespace SimpleTransport
                 Server.Write(spawnWriter, c);
             }
 
+            // TODO Get the components
+
             // TODO Broadcast this ghost position to all clients
 
             Instances.Add(instance);
@@ -69,16 +82,14 @@ namespace SimpleTransport
             var prefab = type == EOwnershipType.Owner ? Ghosts[prefabId].OwnerPrefab : Ghosts[prefabId].GhostPrefab;
             var instance = Instantiate(prefab, client.transform);
 
-            // TODO Assign Readers
-
-            /*
             if (type == EOwnershipType.Owner)
             {
-                foreach (var sender in instance.Senders)
-                {
-                    sender.InstanceId = instanceId;
-                    //client.Senders.Add(sender);
-                }
+                var transformRPC = new TransformRPC();
+                var transformData = new TransformRPCData { Target = instance.transform };
+
+                // TODO You shoudn't have to create it for it to be called by the client
+                transformRPC.CreateWriter(transformData, client.ConnectionId, instanceId);
+                client.Add(transformRPC);
             }
             else
             {
@@ -88,7 +99,6 @@ namespace SimpleTransport
                     //client.Readers.Add(reader);
                 }
             }
-            */
 
             instance.InstanceId = instanceId;
             Instances.Add(instance);

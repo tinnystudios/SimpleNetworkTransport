@@ -24,7 +24,7 @@ namespace SimpleTransport
             Driver.Dispose();
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             Driver.ScheduleUpdate().Complete();
 

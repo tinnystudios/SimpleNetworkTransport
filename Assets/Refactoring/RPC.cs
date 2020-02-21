@@ -1,23 +1,29 @@
 ﻿using System;
 using Unity.Collections;
 using Unity.Networking.Transport;
+using UnityEngine;
 
 namespace SimpleTransport
 {
-    public abstract class RPC<T> : INetworkReader
+    public abstract class RPC<T> : INetworkReader, INetworkWriter
     {
         public int BaseCapacity => 4;
         public abstract int Capacity { get; }
         public abstract int Id { get; }
 
-        public int? ConnectionId { get; }
-        public int? InstanceId { get; }
+        public int? ConnectionId { get; set; }
+        public int? InstanceId { get; set; }
 
         public T Data;
 
         public DataStreamWriter CreateWriter(T data, int? connectionId = null, int? instanceId = null)
         {
+            ConnectionId = connectionId;
+            InstanceId = instanceId;
+            Data = data;
+
             var writer = new DataStreamWriter(BaseCapacity + Capacity, Allocator.Temp);
+            writer.Write(Id);
 
             if (connectionId != null)
                 writer.Write(connectionId.Value);
@@ -25,7 +31,6 @@ namespace SimpleTransport
             if (instanceId != null)
                 writer.Write(instanceId.Value);
 
-            writer.Write(Id);
             Write(writer, data);
 
             return writer;
@@ -35,5 +40,12 @@ namespace SimpleTransport
 
         public abstract void Write(DataStreamWriter writer, T data);
         public abstract void Read(DataStreamReader reader, ref DataStreamReader.Context context);
+
+        public DataStreamWriter Write(int? connectionId = null, int? instanceId = null)
+        {
+            var writer = CreateWriter(Data, ConnectionId, InstanceId);
+            Write(writer, Data);
+            return writer;
+        }
     }
 }

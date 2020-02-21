@@ -1,5 +1,4 @@
 ﻿using Unity.Networking.Transport;
-using UnityEngine;
 
 namespace SimpleTransport
 {
@@ -10,8 +9,7 @@ namespace SimpleTransport
 
         public override void Read(DataStreamReader reader, ref DataStreamReader.Context context)
         {
-            if(Data == null)
-                Data = new SpawnRPCData();
+            if(Data == null) Data = new SpawnRPCData();
 
             Data.InstanceId = reader.ReadInt(ref context);
             Data.PrefabId = reader.ReadInt(ref context);
