@@ -39,17 +39,9 @@ namespace SimpleTransport
                 instance.InstanceId = instanceId;
                 instance.ConnectionId = connection.Value.InternalId;
 
-                var transformRPC = new TransformRPC
-                {
-                    Data = new TransformRPCData
-                    {
-                        Target = instance.transform,
-                    },
-                    ConnectionId = connection.Value.InternalId,
-                    InstanceId = instanceId,
-                };
-
-                Server.AddReader(transformRPC);
+                var rpcComponents = instance.GetComponentsInChildren<RPCComponent>();
+                foreach (var rpcComponent in rpcComponents)
+                    Server.AddReader(rpcComponent.GetReader(instance));
             }
 
             // Broadcast to all clients to make this object
@@ -81,26 +73,22 @@ namespace SimpleTransport
             var type = (EOwnershipType)ownershipId;
             var prefab = type == EOwnershipType.Owner ? Ghosts[prefabId].OwnerPrefab : Ghosts[prefabId].GhostPrefab;
             var instance = Instantiate(prefab, client.transform);
+            instance.ConnectionId = client.ConnectionId;
+            instance.InstanceId = instanceId;
 
             if (type == EOwnershipType.Owner)
             {
-                var transformRPC = new TransformRPC();
-                var transformData = new TransformRPCData { Target = instance.transform };
-
-                // TODO You shoudn't have to create it for it to be called by the client
-                transformRPC.CreateWriter(transformData, client.ConnectionId, instanceId);
-                client.Add(transformRPC);
+                var rpcComponents = instance.GetComponentsInChildren<RPCComponent>();
+                foreach (var rpcComponent in rpcComponents)
+                    client.Add(rpcComponent.GetWriter(instance));
             }
             else
             {
-                foreach (var reader in instance.Readers)
-                {
-                    reader.InstanceId = instanceId;
-                    //client.Readers.Add(reader);
-                }
+                var rpcComponents = instance.GetComponentsInChildren<RPCComponent>();
+                foreach (var rpcComponent in rpcComponents)
+                    client.Add(rpcComponent.GetReader(instance));
             }
 
-            instance.InstanceId = instanceId;
             Instances.Add(instance);
         }
     }

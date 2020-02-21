@@ -59,5 +59,10 @@ namespace SimpleTransport
         {
             Writers.Add(writer);
         }
+
+        public void Add(INetworkReader reader)
+        {
+            Readers.Add(reader);
+        }
     }
 }
