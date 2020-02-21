@@ -24,10 +24,8 @@ namespace SimpleTransport
             rotation.z = BitConverter.ToSingle(buff, 5 * sizeof(float));
             rotation.w = BitConverter.ToSingle(buff, 6 * sizeof(float));
 
-            Debug.Log(vect);
-
-            //Data.Target.position = vect;
-            //Data.Target.rotation = rotation;
+            Data.Target.position = vect;
+            Data.Target.rotation = rotation;
         }
 
         public override void Write(DataStreamWriter writer, TransformRPCData data)
