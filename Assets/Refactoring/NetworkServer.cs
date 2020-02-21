@@ -7,22 +7,34 @@ namespace SimpleTransport
 {
     public class NetworkServer : NetworkServerBase
     {
-        public Action<NetworkConnection> OnClientConnected;
-        public Action<int> OnClientDisconnected;
-
         public List<INetworkReader> Readers;
 
         protected override void ClientConnected(NetworkConnection connection)
         {
-            OnClientConnected?.Invoke(connection);
+        }
+
+        protected override void ClientDisconnected(int id)
+        {
+            CleanReaders(id);
         }
 
         protected override void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context context)
         {
             var readerId = stream.ReadInt(ref context);
-
             var reader = Readers.SingleOrDefault(x => x.Id == readerId);
             reader.Read(stream, ref context);
+        }
+
+        private void CleanReaders(int connectionId)
+        {
+            for (int i = 0; i < Readers.Count; i++)
+            {
+                if (Readers[i].ConnectionId == connectionId)
+                {
+                    Readers.RemoveAt(i);
+                    i--;
+                }
+            }
         }
     }
 }

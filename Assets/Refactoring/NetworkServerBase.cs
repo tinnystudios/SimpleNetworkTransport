@@ -1,4 +1,5 @@
-﻿using Unity.Collections;
+﻿using System;
+using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -7,6 +8,9 @@ namespace SimpleTransport
 {
     public abstract class NetworkServerBase : MonoBehaviour
     {
+        public Action<NetworkConnection> OnClientConnected;
+        public Action<int> OnClientDisconnected;
+
         public NetworkConfig NetworkConfig;
 
         public UdpNetworkDriver m_Driver;
@@ -57,7 +61,7 @@ namespace SimpleTransport
             while ((c = m_Driver.Accept()) != default(NetworkConnection))
             {
                 m_Connections.Add(c);
-                ClientConnected(c);
+                OnClientConnected?.Invoke(c);
                 Debug.Log($"New user connected: {c.InternalId}");
             }
 
@@ -86,7 +90,24 @@ namespace SimpleTransport
             }
         }
 
+        public void Disconnect(int internalId)
+        {
+            for (int i = 0; i < m_Connections.Length; i++)
+            {
+                if (m_Connections[i].InternalId == internalId)
+                {
+                    m_Driver.Disconnect(m_Connections[i]);
+                    ClientDisconnected(internalId);
+
+                    break;
+                }
+            }
+
+            OnClientDisconnected?.Invoke(internalId);
+        }
+
         protected abstract void ClientConnected(NetworkConnection connection);
+        protected abstract void ClientDisconnected(int id);
         protected abstract void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context context);
     }
 }
