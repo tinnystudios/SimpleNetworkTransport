@@ -1,17 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Unity.Networking.Transport;
+using UnityEngine;
 
 namespace SimpleTransport
 {
     public class NetworkServer : NetworkServerBase
     {
-        public List<INetworkReader> Readers;
+        public List<INetworkReader> Readers = new List<INetworkReader>();
 
         protected override void ClientConnected(NetworkConnection connection)
         {
             var writer = new ClientConnectionRPC().CreateWriter(connection.InternalId);
             Write(writer, connection);
+
+            Debug.Log("Writing connection ID to client");
         }
 
         protected override void ClientDisconnected(int id)
@@ -28,9 +31,13 @@ namespace SimpleTransport
 
         private void CleanReaders(int connectionId)
         {
-            for (int i = 0; i < Readers.Count; i++)
+            for (var i = 0; i < Readers.Count; i++)
             {
-                if(Readers[i])
+                if (Readers[i].ConnectionId != connectionId)
+                    continue;
+
+                Readers.RemoveAt(i);
+                i--;
             }
         }
     }

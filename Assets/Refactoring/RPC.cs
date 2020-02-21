@@ -30,6 +30,8 @@ namespace SimpleTransport
             return writer;
         }
 
+        public override string ToString() { return $"RPC Data: {Data}"; }
+
         public abstract void Write(DataStreamWriter writer, T data);
         public abstract void Read(DataStreamReader reader, ref DataStreamReader.Context context);
     }

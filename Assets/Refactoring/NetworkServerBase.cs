@@ -61,6 +61,7 @@ namespace SimpleTransport
             while ((c = m_Driver.Accept()) != default(NetworkConnection))
             {
                 m_Connections.Add(c);
+                ClientConnected(c);
                 OnClientConnected?.Invoke(c);
                 Debug.Log($"New user connected: {c.InternalId}");
             }

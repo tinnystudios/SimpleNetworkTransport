@@ -24,6 +24,7 @@ namespace SimpleTransport
         public void SpawnInServer(int prefabId, Vector3 position, Quaternion rotation, NetworkConnection? connection = null)
         {
             Debug.Log($"Spawned {prefabId} in server");
+            Debug.Log($"Notify all clients to add this ghost");
         }
     }
 }
