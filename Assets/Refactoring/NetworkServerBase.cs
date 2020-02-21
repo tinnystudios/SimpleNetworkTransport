@@ -106,6 +106,21 @@ namespace SimpleTransport
             OnClientDisconnected?.Invoke(internalId);
         }
 
+        public void Write(DataStreamWriter writer, NetworkConnection connection)
+        {
+            m_Driver.Send(NetworkPipeline.Null, connection, writer);
+            writer.Dispose();
+        }
+
+        public void WriteToAllConnections(DataStreamWriter writer)
+        {
+            foreach (var connection in m_Connections)
+            {
+                m_Driver.Send(NetworkPipeline.Null, connection, writer);
+                writer.Dispose();
+            }
+        }
+
         protected abstract void ClientConnected(NetworkConnection connection);
         protected abstract void ClientDisconnected(int id);
         protected abstract void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context context);

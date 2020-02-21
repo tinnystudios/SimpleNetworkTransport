@@ -7,10 +7,13 @@ namespace SimpleTransport
     public class NetworkClient : NetworkClientBase
     {
         public List<INetworkReader> Readers;
+        public ClientConnectionRPC ClientConnectionRpc = new ClientConnectionRPC();
+
+        public int ConnectionId => ClientConnectionRpc.Data;
 
         private void Awake()
         {
-            // Read on connected
+            Readers.Add(ClientConnectionRpc);
         }
 
         protected override void Read(DataStreamReader stream)
@@ -22,9 +25,9 @@ namespace SimpleTransport
             reader.Read(stream, ref context);
         }
 
-        protected override void Write(DataStreamWriter writer, UdpNetworkDriver driver, NetworkConnection connection)
+        public override void Write(DataStreamWriter writer)
         {
-            connection.Send(driver, writer);
+            Connection.Send(Driver, writer);
             writer.Dispose();
         }
     }

@@ -8,7 +8,6 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     public Server Server;
-
     public List<GhostPair> Ghosts;
     public List<Ghost> Instances;
 

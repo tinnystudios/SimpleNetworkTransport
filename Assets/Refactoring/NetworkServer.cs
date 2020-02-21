@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Unity.Networking.Transport;
 
@@ -11,6 +10,8 @@ namespace SimpleTransport
 
         protected override void ClientConnected(NetworkConnection connection)
         {
+            var writer = new ClientConnectionRPC().CreateWriter(connection.InternalId);
+            Write(writer, connection);
         }
 
         protected override void ClientDisconnected(int id)
@@ -29,11 +30,7 @@ namespace SimpleTransport
         {
             for (int i = 0; i < Readers.Count; i++)
             {
-                if (Readers[i].ConnectionId == connectionId)
-                {
-                    Readers.RemoveAt(i);
-                    i--;
-                }
+                if(Readers[i])
             }
         }
     }

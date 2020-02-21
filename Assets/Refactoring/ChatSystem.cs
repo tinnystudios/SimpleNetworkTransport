@@ -6,9 +6,10 @@ namespace SimpleTransport
     {
         public NetworkClient NetworkClient;
 
-        public void SendMessage(string text)
+        public void SendToServer(string text)
         {
-            NetworkClient.Write(new ChatRPC().CreateWriter(text));
+            var writer = new ChatRPC().CreateWriter(text, NetworkClient.ConnectionId);
+            NetworkClient.Write(writer);
         }
     }
 }

@@ -8,30 +8,30 @@ namespace SimpleTransport
     {
         public NetworkConfig NetworkConfig;
 
-        private UdpNetworkDriver _driver;
-        private NetworkConnection _connection;
+        protected UdpNetworkDriver Driver;
+        protected NetworkConnection Connection;
 
         private bool _connected;
 
         private void Start()
         {
-            _driver = new UdpNetworkDriver(new INetworkParameter[0]);
+            Driver = new UdpNetworkDriver(new INetworkParameter[0]);
             Connect();
         }
 
         private void OnDestroy()
         {
-            _driver.Dispose();
+            Driver.Dispose();
         }
 
         private void Update()
         {
-            _driver.ScheduleUpdate().Complete();
+            Driver.ScheduleUpdate().Complete();
 
             DataStreamReader stream;
             NetworkEvent.Type cmd;
 
-            while ((cmd = _connection.PopEvent(_driver, out stream)) != NetworkEvent.Type.Empty)
+            while ((cmd = Connection.PopEvent(Driver, out stream)) != NetworkEvent.Type.Empty)
             {
                 if (cmd == NetworkEvent.Type.Connect)
                 {
@@ -51,12 +51,12 @@ namespace SimpleTransport
 
         public void Connect()
         {
-            _connection = default(NetworkConnection);
+            Connection = default(NetworkConnection);
             var endpoint = NetworkConfig.GetClientEndPoint();
-            _connection = _driver.Connect(endpoint);
+            Connection = Driver.Connect(endpoint);
         }
 
         protected abstract void Read(DataStreamReader stream);
-        protected abstract void Write(DataStreamWriter writer, UdpNetworkDriver driver, NetworkConnection connection);
+        public abstract void Write(DataStreamWriter writer);
     }
 }
