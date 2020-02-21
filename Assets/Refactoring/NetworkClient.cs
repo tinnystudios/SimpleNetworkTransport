@@ -15,6 +15,7 @@ namespace SimpleTransport
         private void Awake()
         {
             Readers.Add(ClientConnectionRpc);
+            Readers.Add(new SpawnRPC());
         }
 
         protected override void Read(DataStreamReader stream)
@@ -25,7 +26,13 @@ namespace SimpleTransport
             var reader = Readers.SingleOrDefault(x => x.Id == readerId);
             reader.Read(stream, ref context);
 
-            Debug.Log(reader);
+            // Need to come up with a nicer way
+            if (reader is SpawnRPC spawnRpc)
+            {
+                var spawner = FindObjectOfType<SpawnSystem>();
+                var spawnData = spawnRpc.Data;
+                spawner.SpawnInClient(spawnData.PrefabId, spawnData.InstanceId, (int)spawnData.Ownership, this);
+            }
         }
 
         public override void Write(DataStreamWriter writer)

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine;
 
@@ -9,12 +10,12 @@ namespace SimpleTransport
     {
         public List<INetworkReader> Readers = new List<INetworkReader>();
 
+        public NativeList<NetworkConnection> Connections => m_Connections;
+
         protected override void ClientConnected(NetworkConnection connection)
         {
             var writer = new ClientConnectionRPC().CreateWriter(connection.InternalId);
             Write(writer, connection);
-
-            Debug.Log("Writing connection ID to client");
         }
 
         protected override void ClientDisconnected(int id)
@@ -39,6 +40,11 @@ namespace SimpleTransport
                 Readers.RemoveAt(i);
                 i--;
             }
+        }
+
+        public void AddReader(INetworkReader reader)
+        {
+            Readers.Add(reader);
         }
     }
 }

@@ -60,10 +60,11 @@ namespace SimpleTransport
             NetworkConnection c;
             while ((c = m_Driver.Accept()) != default(NetworkConnection))
             {
+                Debug.Log($"New user connected: {c.InternalId}");
+
                 m_Connections.Add(c);
                 ClientConnected(c);
                 OnClientConnected?.Invoke(c);
-                Debug.Log($"New user connected: {c.InternalId}");
             }
 
             DataStreamReader stream;
