@@ -18,14 +18,28 @@ namespace SimpleTransport
 
         private void OnClientConnected(NetworkConnection connection)
         {
+            /*
+            foreach (var instance in Instances)
+            {
+                var spawnRPC = new SpawnRPC();
+                var data = new SpawnRPCData
+                {
+                    PrefabId = instance.PrefabId,
+                    InstanceId = instance.InstanceId,
+                    Ownership = EOwnershipType.Server,
+                };
+
+                var writer = spawnRPC.CreateWriter(data);
+                Server.Write(writer, connection);
+            }
+            */
+
             SpawnInServer(0, Vector3.zero, Quaternion.identity, connection);
         }
 
         public void SpawnInServer(int prefabId, Vector3 position, Quaternion rotation, NetworkConnection? connection = null)
         {
-            Debug.Log($"Spawned {prefabId} in server");
-
-            var instance = Instantiate(Ghosts[prefabId].GhostPrefab);
+            var instance = Instantiate(Ghosts[prefabId].GhostPrefab, transform);
             instance.transform.position = position;
             instance.transform.rotation = rotation;
             instance.PrefabId = prefabId;
@@ -75,6 +89,9 @@ namespace SimpleTransport
             var instance = Instantiate(prefab, client.transform);
             instance.ConnectionId = client.ConnectionId;
             instance.InstanceId = instanceId;
+            Instances.Add(instance);
+
+            // TODO Ghost for non-owners are not reading correctly.
 
             if (type == EOwnershipType.Owner)
             {
@@ -89,7 +106,6 @@ namespace SimpleTransport
                     client.Add(rpcComponent.GetReader(instance));
             }
 
-            Instances.Add(instance);
         }
     }
 }

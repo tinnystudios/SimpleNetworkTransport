@@ -25,27 +25,27 @@ namespace SimpleTransport
 
         protected override void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context context)
         {
-            var readerId = stream.ReadInt(ref context);
-            //Debug.Log($"Reading: {readerId}");
-
             foreach (var reader in Readers)
             {
+                var c = default(DataStreamReader.Context);
+                var readerId = stream.ReadInt(ref c);
+
                 if (reader.Id != readerId)
                     continue;
 
                 if (reader.ConnectionId != null)
                 {
-                    var conId = stream.ReadInt(ref context);
+                    var conId = stream.ReadInt(ref c);
                 }
 
                 if (reader.InstanceId != null)
                 {
-                    var instanceId = stream.ReadInt(ref context);
+                    var instanceId = stream.ReadInt(ref c);
                     if (reader.InstanceId != instanceId)
                         continue;
                 }
 
-                reader.Read(stream, ref context);
+                reader.Read(stream, ref c);
             }
         }
 
