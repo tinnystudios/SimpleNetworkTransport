@@ -8,6 +8,11 @@ namespace SimpleTransport
     {
         public List<INetworkReader> Readers;
 
+        private void Awake()
+        {
+            // Read on connected
+        }
+
         protected override void Read(DataStreamReader stream)
         {
             var context = default(DataStreamReader.Context);
