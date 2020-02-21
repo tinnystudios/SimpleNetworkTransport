@@ -41,7 +41,6 @@ namespace SimpleTransport
                 if (reader.InstanceId != null)
                 {
                     var instanceId = stream.ReadInt(ref context);
-                    Debug.Log("instanceID " + instanceId);
                     if (reader.InstanceId != instanceId)
                         continue;
                 }

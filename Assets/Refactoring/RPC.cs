@@ -22,7 +22,12 @@ namespace SimpleTransport
             InstanceId = instanceId;
             Data = data;
 
-            var writer = new DataStreamWriter(BaseCapacity + Capacity, Allocator.Temp);
+            var totalCapacity = BaseCapacity;
+            totalCapacity += connectionId == null ? 0 : 4;
+            totalCapacity += connectionId == null ? 0 : 4;
+            totalCapacity += Capacity;
+
+            var writer = new DataStreamWriter(totalCapacity, Allocator.Temp);
             writer.Write(Id);
 
             if (connectionId != null)
@@ -44,7 +49,6 @@ namespace SimpleTransport
         public DataStreamWriter Write(int? connectionId = null, int? instanceId = null)
         {
             var writer = CreateWriter(Data, ConnectionId, InstanceId);
-            Write(writer, Data);
             return writer;
         }
     }

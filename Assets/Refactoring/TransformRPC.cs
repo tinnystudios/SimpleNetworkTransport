@@ -6,7 +6,7 @@ namespace SimpleTransport
 {
     public class TransformRPC : RPC<TransformRPCData>
     {
-        public override int Capacity => 36 + 60;
+        public override int Capacity => 36;
         public override int Id => 4;
 
         public override void Read(DataStreamReader reader, ref DataStreamReader.Context context)
