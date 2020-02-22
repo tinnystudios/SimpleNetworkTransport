@@ -34,18 +34,38 @@ namespace SimpleTransport
 
         protected override void Read(DataStreamReader stream)
         {
-            var context = default(DataStreamReader.Context);
-            var readerId = stream.ReadInt(ref context);
+            var readerLength = Readers.Count;
 
-            var reader = Readers.SingleOrDefault(x => x.Id == readerId);
-            reader.Read(stream, ref context);
-
-            // Need to come up with a nicer way
-            if (reader is SpawnRPC spawnRpc)
+            for (int i = 0; i < readerLength; i++)
             {
-                var spawner = FindObjectOfType<SpawnSystem>();
-                var spawnData = spawnRpc.Data;
-                spawner.SpawnInClient(spawnData.PrefabId, spawnData.InstanceId, (int)spawnData.Ownership, this);
+                INetworkReader reader = Readers[i];
+                var context = default(DataStreamReader.Context);
+                var readerId = stream.ReadInt(ref context);
+
+                if (reader.Id != readerId)
+                    continue;
+
+                if (reader.ConnectionId != null)
+                {
+                    var conId = stream.ReadInt(ref context);
+                }
+
+                if (reader.InstanceId != null)
+                {
+                    var instanceId = stream.ReadInt(ref context);
+                    if (reader.InstanceId != instanceId)
+                        continue;
+                }
+
+                reader.Read(stream, ref context);
+
+                // Need to come up with a nicer way
+                if (reader is SpawnRPC spawnRpc)
+                {
+                    var spawner = FindObjectOfType<SpawnSystem>();
+                    var spawnData = spawnRpc.Data;
+                    spawner.SpawnInClient(spawnData.PrefabId, spawnData.InstanceId, (int)spawnData.Ownership, this);
+                }
             }
         }
 

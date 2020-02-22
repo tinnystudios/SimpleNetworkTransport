@@ -90,6 +90,8 @@ namespace SimpleTransport
                     }
                 }
             }
+
+            OnUpdate();
         }
 
         public void Disconnect(int internalId)
@@ -126,5 +128,6 @@ namespace SimpleTransport
         protected abstract void ClientConnected(NetworkConnection connection);
         protected abstract void ClientDisconnected(int id);
         protected abstract void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context context);
+        protected abstract void OnUpdate();
     }
 }

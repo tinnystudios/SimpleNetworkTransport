@@ -18,7 +18,7 @@ namespace SimpleTransport
 
         private void OnClientConnected(NetworkConnection connection)
         {
-            /*
+            // TODO This is spawning an extra ghost
             foreach (var instance in Instances)
             {
                 var spawnRPC = new SpawnRPC();
@@ -32,7 +32,6 @@ namespace SimpleTransport
                 var writer = spawnRPC.CreateWriter(data);
                 Server.Write(writer, connection);
             }
-            */
 
             SpawnInServer(0, Vector3.zero, Quaternion.identity, connection);
         }
@@ -74,9 +73,9 @@ namespace SimpleTransport
                 var spawnWriter = new SpawnRPC().CreateWriter(spawnRPCData);
                 Server.Write(spawnWriter, c);
 
-
-                // TODO Add all other ones too
-
+                var rpcComponents = instance.GetComponentsInChildren<RPCComponent>();
+                foreach (var rpcComponent in rpcComponents)
+                    Server.AddWriter(rpcComponent.GetWriter(instance));
             }
 
             // TODO Broadcast this ghost position to all clients

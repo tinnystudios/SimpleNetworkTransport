@@ -9,8 +9,21 @@ namespace SimpleTransport
     public class NetworkServer : NetworkServerBase
     {
         public List<INetworkReader> Readers = new List<INetworkReader>();
+        public List<INetworkWriter> Writers = new List<INetworkWriter>();
 
         public NativeList<NetworkConnection> Connections => m_Connections;
+
+        protected override void OnUpdate()
+        {
+            foreach (var connection in m_Connections)
+            {
+                foreach (var writer in Writers)
+                {
+                    var streamWriter = writer.Write();
+                    Write(streamWriter, connection);
+                }
+            }
+        }
 
         protected override void ClientConnected(NetworkConnection connection)
         {
@@ -64,6 +77,11 @@ namespace SimpleTransport
         public void AddReader(INetworkReader reader)
         {
             Readers.Add(reader);
+        }
+
+        public void AddWriter(INetworkWriter writer)
+        {
+            Writers.Add(writer);
         }
     }
 }
