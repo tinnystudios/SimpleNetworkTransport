@@ -90,7 +90,8 @@ namespace SimpleTransport
             var instance = Instantiate(prefab, client.transform);
             instance.ConnectionId = client.ConnectionId;
             instance.InstanceId = instanceId;
-            Instances.Add(instance);
+
+            instance.transform.name += $"ConnectionID: {instance.ConnectionId} Instance ID: {instanceId} Ownership: {type}";
 
             // TODO Ghost for non-owners are not reading correctly.
 
