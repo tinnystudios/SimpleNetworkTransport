@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Unity.Networking.Transport;
 using UnityEngine;
 
@@ -136,6 +137,17 @@ namespace SimpleTransport
             var writer = request.CreateWriter(spawnData);
 
             client.Write(writer);
+        }
+
+        public void DespawnInServer(int instanceId)
+        {
+            var instance = Instances.SingleOrDefault(x => x.GetInstanceID() == instanceId);
+            Instances.Remove(instance);
+
+            Server.ClearReferences(instanceId);
+            Destroy(instance.gameObject);
+
+            Server.WriteToAllConnections(new DespawnRPC().CreateWriter(instanceId));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
 using Unity.Networking.Transport;
@@ -100,6 +101,11 @@ namespace SimpleTransport
         public void AddWriter(INetworkWriter writer)
         {
             Writers.Add(writer);
+        }
+
+        public void ClearReferences(int instanceId)
+        {
+            throw new NotImplementedException();
         }
     }
 }
