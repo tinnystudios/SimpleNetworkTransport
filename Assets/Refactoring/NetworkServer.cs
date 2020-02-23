@@ -43,8 +43,11 @@ namespace SimpleTransport
 
         protected override void Read(int connectionId, DataStreamReader stream, ref DataStreamReader.Context context)
         {
-            foreach (var reader in Readers)
+            var readerLength = Readers.Count;
+
+            for (int i = 0; i < readerLength; i++)
             {
+                INetworkReader reader = Readers[i];
                 var c = default(DataStreamReader.Context);
                 var readerId = stream.ReadInt(ref c);
 
@@ -71,7 +74,7 @@ namespace SimpleTransport
                     var spawner = FindObjectOfType<SpawnSystem>();
                     var spawnData = spawnRpc.Data;
 
-                    spawner.SpawnInServer(spawnData.PrefabId, spawnData.Position, spawnData.Rotation, null);
+                    spawner.SpawnInServer(spawnData.PrefabId, spawnData.Position, spawnData.Rotation, connectionId);
                 }
             }
         }
