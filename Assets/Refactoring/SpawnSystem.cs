@@ -116,17 +116,16 @@ namespace SimpleTransport
 
         public void SpawnRequest(int prefabId, NetworkClient client, Vector3 position, Quaternion rotation)
         {
-            var request = new SpawnRPC();
+            var request = new SpawnRequestRPC();
             var spawnData = new SpawnRPCData
             {
-                InstanceId = 9999,
-                Ownership = EOwnershipType.Owner,
                 PrefabId = prefabId,
+                Ownership = EOwnershipType.Owner,
                 Position = position,
                 Rotation = rotation,
             };
 
-            var writer = request.CreateWriter(spawnData, client.ConnectionId);
+            var writer = request.CreateWriter(spawnData);
 
             client.Write(writer);
         }

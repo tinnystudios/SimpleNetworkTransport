@@ -15,7 +15,7 @@ namespace SimpleTransport
 
         private void Awake()
         {
-            Readers.Add(new SpawnRPC());
+            Readers.Add(new SpawnRequestRPC());
         }
 
         protected override void OnUpdate()
@@ -66,11 +66,12 @@ namespace SimpleTransport
                 reader.Read(stream, ref c);
 
                 // TODO This should be refactored to not have to check
-                if (reader is SpawnRPC spawnRpc)
+                if (reader is SpawnRequestRPC spawnRpc)
                 {
                     var spawner = FindObjectOfType<SpawnSystem>();
                     var spawnData = spawnRpc.Data;
-                    //spawner.SpawnInServer(spawnData.PrefabId, spawnData.Position, spawnData.Rotation, connectionId);
+
+                    spawner.SpawnInServer(spawnData.PrefabId, spawnData.Position, spawnData.Rotation, null);
                 }
             }
         }
