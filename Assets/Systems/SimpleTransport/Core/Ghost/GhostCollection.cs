@@ -19,10 +19,7 @@ public class GhostCollection : MonoBehaviour
 
     private void OnDisconnected(int id)
     {
-        var instances = Spawner.Instances.Where(x => x.ConnectionId == id).ToList();
 
-        foreach(var instance in instances)
-            Spawner.DespawnInServer(instance.GetInstanceID());
     }
 
     private void OnClientConnected(NetworkConnection connection)
@@ -44,6 +41,7 @@ public class GhostCollection : MonoBehaviour
         writer.Write(AddPreviousGhostSenderId);
         writer.Write(length - 1);
 
+        /*
         foreach (var c in Server.Connections)
         {
             if (c.InternalId == connection.InternalId)
@@ -54,6 +52,7 @@ public class GhostCollection : MonoBehaviour
             writer.Write(ghost.GetInstanceID());
 
         }
+        */
 
         Server.Driver.Send(NetworkPipeline.Null, connection, writer);
         writer.Dispose();

@@ -12,7 +12,6 @@ namespace SimpleTransport
                 {
                     Target = ghost.transform,
                 },
-                ConnectionId = ghost.ConnectionId,
                 InstanceId = ghost.InstanceId,
             };
         }
@@ -23,7 +22,7 @@ namespace SimpleTransport
             var transformData = new TransformRPCData { Target = ghost.transform };
 
             // TODO You shoudn't have to create it for it to be called by the client
-            transformRPC.CreateWriter(transformData, ghost.ConnectionId, ghost.InstanceId);
+            transformRPC.CreateWriter(transformData, instanceId: ghost.InstanceId);
             return transformRPC;
         }
     }

@@ -56,9 +56,6 @@ namespace SimpleTransport
             // For now, having a connection means it's owner owned.
             if (connection != null)
             {
-                instance.InstanceId = instanceId;
-                instance.ConnectionId = connection.Value;
-
                 var rpcComponents = instance.GetComponentsInChildren<RPCComponent>();
                 foreach (var rpcComponent in rpcComponents)
                     Server.AddReader(rpcComponent.GetReader(instance));
@@ -99,19 +96,15 @@ namespace SimpleTransport
             var type = (EOwnershipType)ownershipId;
             var prefab = type == EOwnershipType.Owner ? Ghosts[prefabId].OwnerPrefab : Ghosts[prefabId].GhostPrefab;
 
-
             // TODO Configuring the instance here determiens if it needs to read connection id or not
             var instance = Instantiate(prefab, client.transform);
 
             instance.InstanceId = instanceId;
 
-            if (type == EOwnershipType.Owner)
-                instance.ConnectionId = client.ConnectionId;
-
             instance.transform.position = position;
             instance.transform.rotation = rotation;
 
-            instance.transform.name += $"ConnectionID: {instance.ConnectionId} Instance ID: {instanceId} Ownership: {type}";
+            instance.transform.name += $"Instance ID: {instanceId} Ownership: {type}";
 
             // TODO Ghost for non-owners are not reading correctly.
 
