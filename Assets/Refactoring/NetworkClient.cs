@@ -38,6 +38,7 @@ namespace SimpleTransport
 
             for (int i = 0; i < readerLength; i++)
             {
+
                 INetworkReader reader = Readers[i];
                 var context = default(DataStreamReader.Context);
                 var readerId = stream.ReadInt(ref context);
@@ -45,14 +46,21 @@ namespace SimpleTransport
                 if (reader.Id != readerId)
                     continue;
 
+                //Debug.Log($"{reader.Id}-{reader.InstanceId}");
+
                 if (reader.ConnectionId != null)
                 {
                     var conId = stream.ReadInt(ref context);
+                    Debug.Log($"{reader.Id}-{reader.InstanceId}-CONNECTION ID {conId}");
+
                 }
 
                 if (reader.InstanceId != null)
                 {
                     var instanceId = stream.ReadInt(ref context);
+
+                    Debug.Log($"{reader.Id}-{reader.InstanceId}- COMPARING WITH: {instanceId}");
+
                     if (reader.InstanceId != instanceId)
                         continue;
                 }
@@ -85,6 +93,7 @@ namespace SimpleTransport
 
         public void Add(INetworkReader reader)
         {
+            Debug.Log($"Added Reader to client: {reader.Id}-{reader.InstanceId}");
             Readers.Add(reader);
         }
     }

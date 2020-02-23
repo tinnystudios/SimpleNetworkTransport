@@ -24,17 +24,22 @@ namespace SimpleTransport
 
             var totalCapacity = BaseCapacity;
             totalCapacity += connectionId == null ? 0 : 4;
-            totalCapacity += connectionId == null ? 0 : 4;
+            totalCapacity += instanceId == null ? 0 : 4;
             totalCapacity += Capacity;
 
             var writer = new DataStreamWriter(totalCapacity, Allocator.Temp);
             writer.Write(Id);
 
             if (connectionId != null)
+            {
+                Debug.Log("writing Con ID " + connectionId.Value);
                 writer.Write(connectionId.Value);
-
+            }
             if (instanceId != null)
+            {
+                Debug.Log("writing instance ID " + instanceId.Value);
                 writer.Write(instanceId.Value);
+            }
 
             Write(writer, data);
 

@@ -27,7 +27,7 @@ namespace SimpleTransport
             Data.Target.position = vect;
             Data.Target.rotation = rotation;
 
-            Debug.Log($"Read: {Data}");
+            //Debug.Log($"Read: {Data}");
         }
 
         public override void Write(DataStreamWriter writer, TransformRPCData data)
@@ -50,7 +50,7 @@ namespace SimpleTransport
             Data.Position = position;
             Data.Rotation = rotation;
 
-            Debug.Log(data);
+            //Debug.Log(data);
         }
     }
 }

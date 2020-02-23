@@ -18,7 +18,6 @@ namespace SimpleTransport
 
         private void OnClientConnected(NetworkConnection connection)
         {
-            // TODO This is spawning an extra ghost
             foreach (var instance in Instances)
             {
                 var spawnRPC = new SpawnRPC();
@@ -51,6 +50,8 @@ namespace SimpleTransport
 
             var instanceId = instance.GetInstanceID();
             var ownership = EOwnershipType.Server;
+
+            instance.InstanceId = instanceId;
 
             // For now, having a connection means it's owner owned.
             if (connection != null)
@@ -98,9 +99,14 @@ namespace SimpleTransport
             var type = (EOwnershipType)ownershipId;
             var prefab = type == EOwnershipType.Owner ? Ghosts[prefabId].OwnerPrefab : Ghosts[prefabId].GhostPrefab;
 
+
+            // TODO Configuring the instance here determiens if it needs to read connection id or not
             var instance = Instantiate(prefab, client.transform);
-            instance.ConnectionId = client.ConnectionId;
+
             instance.InstanceId = instanceId;
+
+            if (type == EOwnershipType.Owner)
+                instance.ConnectionId = client.ConnectionId;
 
             instance.transform.position = position;
             instance.transform.rotation = rotation;
