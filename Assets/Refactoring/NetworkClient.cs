@@ -64,7 +64,10 @@ namespace SimpleTransport
                 {
                     var spawner = FindObjectOfType<SpawnSystem>();
                     var spawnData = spawnRpc.Data;
-                    spawner.SpawnInClient(spawnData.PrefabId, spawnData.InstanceId, (int)spawnData.Ownership, this);
+                    var position = spawnData.Position;
+                    var rotation = spawnData.Rotation;
+
+                    spawner.SpawnInClient(spawnData.PrefabId, spawnData.InstanceId, (int)spawnData.Ownership, position, rotation, this);
                 }
             }
         }

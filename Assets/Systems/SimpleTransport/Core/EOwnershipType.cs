@@ -1,5 +1,6 @@
 ﻿public enum EOwnershipType
 {
     Owner,
-    Server
+    Server,
+    Observer
 }

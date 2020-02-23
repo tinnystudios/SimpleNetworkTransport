@@ -33,7 +33,7 @@ namespace SimpleTransport
                 Server.Write(writer, connection);
             }
 
-            SpawnInServer(0, Vector3.zero, Quaternion.identity, connection);
+            SpawnInServer(0, new Vector3(0,5,0), Quaternion.identity, connection);
         }
 
         public void SpawnInServer(int prefabId, Vector3 position, Quaternion rotation, NetworkConnection connection)
@@ -72,7 +72,9 @@ namespace SimpleTransport
                 {
                     InstanceId = instanceId,
                     PrefabId = prefabId,
-                    Ownership = ownership
+                    Ownership = ownership,
+                    Position = position,
+                    Rotation = rotation,
                 };
 
                 var spawnWriter = new SpawnRPC().CreateWriter(spawnRPCData);
@@ -88,13 +90,17 @@ namespace SimpleTransport
             Instances.Add(instance);
         }
 
-        public void SpawnInClient(int prefabId, int instanceId, int ownershipId, NetworkClient client)
+        public void SpawnInClient(int prefabId, int instanceId, int ownershipId, Vector3 position, Quaternion rotation, NetworkClient client)
         {
             var type = (EOwnershipType)ownershipId;
             var prefab = type == EOwnershipType.Owner ? Ghosts[prefabId].OwnerPrefab : Ghosts[prefabId].GhostPrefab;
+
             var instance = Instantiate(prefab, client.transform);
             instance.ConnectionId = client.ConnectionId;
             instance.InstanceId = instanceId;
+
+            instance.transform.position = position;
+            instance.transform.rotation = rotation;
 
             instance.transform.name += $"ConnectionID: {instance.ConnectionId} Instance ID: {instanceId} Ownership: {type}";
 

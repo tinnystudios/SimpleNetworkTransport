@@ -74,6 +74,7 @@ namespace SimpleTransport
                     var spawner = FindObjectOfType<SpawnSystem>();
                     var spawnData = spawnRpc.Data;
 
+                    // Passing the connection id will make it owned by the connection.
                     spawner.SpawnInServer(spawnData.PrefabId, spawnData.Position, spawnData.Rotation, connectionId);
                 }
             }
