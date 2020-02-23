@@ -7,6 +7,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3749467709236930404, guid: 77f5a3abc26403a4299bc44d5b8aa499,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5490956072479601644, guid: 77f5a3abc26403a4299bc44d5b8aa499,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -95,7 +100,6 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 8008684176529282714, guid: 77f5a3abc26403a4299bc44d5b8aa499, type: 3}
     - {fileID: 8660230296112097353, guid: 77f5a3abc26403a4299bc44d5b8aa499, type: 3}
-    - {fileID: 3749467709236930404, guid: 77f5a3abc26403a4299bc44d5b8aa499, type: 3}
     - {fileID: 1069101487, guid: 77f5a3abc26403a4299bc44d5b8aa499, type: 3}
-    - {fileID: 5490956072479601650, guid: 77f5a3abc26403a4299bc44d5b8aa499, type: 3}
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 77f5a3abc26403a4299bc44d5b8aa499, type: 3}

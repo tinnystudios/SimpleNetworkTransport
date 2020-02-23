@@ -66,10 +66,5 @@ namespace SimpleTransport
     public class SpawnRequestRPC : SpawnRPC
     {
         public override int Id => 6;
-
-        public override void Read(DataStreamReader reader, ref DataStreamReader.Context context)
-        {
-            base.Read(reader, ref context);
-        }
     }
 }

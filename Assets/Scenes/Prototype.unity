@@ -1008,9 +1008,9 @@ MonoBehaviour:
       type: 3}
     OwnerPrefab: {fileID: -1928233420292765084, guid: 77f5a3abc26403a4299bc44d5b8aa499,
       type: 3}
-  - GhostPrefab: {fileID: 1053165355863423799, guid: 0a526fcb62afbf64795b434bac3f4cd0,
+  - GhostPrefab: {fileID: 5192047464567092556, guid: bbc43ef09edcf9443aaa43bc18cab114,
       type: 3}
-    OwnerPrefab: {fileID: 5192047464567092556, guid: bbc43ef09edcf9443aaa43bc18cab114,
+    OwnerPrefab: {fileID: 1053165355863423799, guid: 0a526fcb62afbf64795b434bac3f4cd0,
       type: 3}
   Instances: []
 --- !u!1 &1669755472
