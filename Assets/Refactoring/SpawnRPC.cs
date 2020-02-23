@@ -1,4 +1,5 @@
 ﻿using Unity.Networking.Transport;
+using UnityEngine;
 
 namespace SimpleTransport
 {
@@ -14,6 +15,8 @@ namespace SimpleTransport
             Data.InstanceId = reader.ReadInt(ref context);
             Data.PrefabId = reader.ReadInt(ref context);
             Data.Ownership = (EOwnershipType)reader.ReadInt(ref context);
+
+            Debug.Log($"reading: {Data}");
         }
 
         public override void Write(DataStreamWriter writer, SpawnRPCData data)
@@ -21,6 +24,8 @@ namespace SimpleTransport
             writer.Write(data.InstanceId);
             writer.Write(data.PrefabId);
             writer.Write((int)data.Ownership);
+
+            Debug.Log($"writing: {data}");
         }
     }
 }

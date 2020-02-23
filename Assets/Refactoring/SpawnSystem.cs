@@ -36,7 +36,12 @@ namespace SimpleTransport
             SpawnInServer(0, Vector3.zero, Quaternion.identity, connection);
         }
 
-        public void SpawnInServer(int prefabId, Vector3 position, Quaternion rotation, NetworkConnection? connection = null)
+        public void SpawnInServer(int prefabId, Vector3 position, Quaternion rotation, NetworkConnection connection)
+        {
+            SpawnInServer(prefabId, position, rotation, connection.InternalId);
+        }
+
+        public void SpawnInServer(int prefabId, Vector3 position, Quaternion rotation, int? connection = null)
         {
             var instance = Instantiate(Ghosts[prefabId].GhostPrefab, transform);
             instance.transform.position = position;
@@ -50,7 +55,7 @@ namespace SimpleTransport
             if (connection != null)
             {
                 instance.InstanceId = instanceId;
-                instance.ConnectionId = connection.Value.InternalId;
+                instance.ConnectionId = connection.Value;
 
                 var rpcComponents = instance.GetComponentsInChildren<RPCComponent>();
                 foreach (var rpcComponent in rpcComponents)
@@ -61,7 +66,7 @@ namespace SimpleTransport
             foreach (var c in Server.Connections)
             {
                 if (connection != null)
-                    ownership = c.InternalId == connection.Value.InternalId ? EOwnershipType.Owner : EOwnershipType.Server;
+                    ownership = c.InternalId == connection.Value ? EOwnershipType.Owner : EOwnershipType.Server;
 
                 var spawnRPCData = new SpawnRPCData
                 {
@@ -107,7 +112,23 @@ namespace SimpleTransport
                 foreach (var rpcComponent in rpcComponents)
                     client.Add(rpcComponent.GetReader(instance));
             }
+        }
 
+        public void SpawnRequest(int prefabId, NetworkClient client, Vector3 position, Quaternion rotation)
+        {
+            var request = new SpawnRPC();
+            var spawnData = new SpawnRPCData
+            {
+                InstanceId = 9999,
+                Ownership = EOwnershipType.Owner,
+                PrefabId = prefabId,
+                Position = position,
+                Rotation = rotation,
+            };
+
+            var writer = request.CreateWriter(spawnData, client.ConnectionId);
+
+            client.Write(writer);
         }
     }
 }

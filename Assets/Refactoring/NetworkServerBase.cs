@@ -87,6 +87,8 @@ namespace SimpleTransport
                     {
                         Debug.Log("Client disconnected from server");
                         m_Connections[i] = default(NetworkConnection);
+                        ClientDisconnected(m_Connections[i].InternalId);
+                        OnClientDisconnected?.Invoke(m_Connections[i].InternalId);
                     }
                 }
             }

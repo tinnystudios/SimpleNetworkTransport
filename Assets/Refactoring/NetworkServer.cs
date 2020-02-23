@@ -13,6 +13,11 @@ namespace SimpleTransport
 
         public NativeList<NetworkConnection> Connections => m_Connections;
 
+        private void Awake()
+        {
+            Readers.Add(new SpawnRPC());
+        }
+
         protected override void OnUpdate()
         {
             foreach (var connection in m_Connections)
@@ -59,6 +64,14 @@ namespace SimpleTransport
                 }
 
                 reader.Read(stream, ref c);
+
+                // TODO This should be refactored to not have to check
+                if (reader is SpawnRPC spawnRpc)
+                {
+                    var spawner = FindObjectOfType<SpawnSystem>();
+                    var spawnData = spawnRpc.Data;
+                    //spawner.SpawnInServer(spawnData.PrefabId, spawnData.Position, spawnData.Rotation, connectionId);
+                }
             }
         }
 
