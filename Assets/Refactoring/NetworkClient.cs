@@ -51,16 +51,11 @@ namespace SimpleTransport
                 if (reader.ConnectionId != null)
                 {
                     var conId = stream.ReadInt(ref context);
-                    Debug.Log($"{reader.Id}-{reader.InstanceId}-CONNECTION ID {conId}");
-
                 }
 
                 if (reader.InstanceId != null)
                 {
                     var instanceId = stream.ReadInt(ref context);
-
-                    Debug.Log($"{reader.Id}-{reader.InstanceId}- COMPARING WITH: {instanceId}");
-
                     if (reader.InstanceId != instanceId)
                         continue;
                 }
@@ -93,7 +88,6 @@ namespace SimpleTransport
 
         public void Add(INetworkReader reader)
         {
-            Debug.Log($"Added Reader to client: {reader.Id}-{reader.InstanceId}");
             Readers.Add(reader);
         }
     }

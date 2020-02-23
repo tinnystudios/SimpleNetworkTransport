@@ -32,12 +32,10 @@ namespace SimpleTransport
 
             if (connectionId != null)
             {
-                Debug.Log("writing Con ID " + connectionId.Value);
                 writer.Write(connectionId.Value);
             }
             if (instanceId != null)
             {
-                Debug.Log("writing instance ID " + instanceId.Value);
                 writer.Write(instanceId.Value);
             }
 
