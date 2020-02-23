@@ -32,8 +32,6 @@ namespace SimpleTransport
 
             Data.Position = vect;
             Data.Rotation = rotation;
-
-            Debug.Log($"reading: {Data}");
         }
 
         public override void Write(DataStreamWriter writer, SpawnRPCData data)
@@ -56,10 +54,6 @@ namespace SimpleTransport
             Buffer.BlockCopy(BitConverter.GetBytes(rotation.w), 0, buff, 6 * sizeof(float), sizeof(float));
 
             writer.Write(buff);
-
-
-
-            Debug.Log($"writing: {data}");
         }
     }
 

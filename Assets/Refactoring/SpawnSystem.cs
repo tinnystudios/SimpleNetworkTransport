@@ -43,7 +43,8 @@ namespace SimpleTransport
 
         public void SpawnInServer(int prefabId, Vector3 position, Quaternion rotation, int? connection = null)
         {
-            var instance = Instantiate(Ghosts[prefabId].GhostPrefab, transform);
+            var prefab = connection == null ? Ghosts[prefabId].OwnerPrefab : Ghosts[prefabId].GhostPrefab;
+            var instance = Instantiate(prefab, transform);
             instance.transform.position = position;
             instance.transform.rotation = rotation;
             instance.PrefabId = prefabId;
@@ -79,10 +80,12 @@ namespace SimpleTransport
 
                 var spawnWriter = new SpawnRPC().CreateWriter(spawnRPCData);
                 Server.Write(spawnWriter, c);
+            }
 
-                var rpcComponents = instance.GetComponentsInChildren<RPCComponent>();
-                foreach (var rpcComponent in rpcComponents)
-                    Server.AddWriter(rpcComponent.GetWriter(instance));
+            var cs = instance.GetComponentsInChildren<RPCComponent>();
+            foreach (var rpcComponent in cs)
+            {
+                Server.AddWriter(rpcComponent.GetWriter(instance));
             }
 
             // TODO Broadcast this ghost position to all clients

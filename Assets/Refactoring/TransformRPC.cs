@@ -26,6 +26,8 @@ namespace SimpleTransport
 
             Data.Target.position = vect;
             Data.Target.rotation = rotation;
+
+            Debug.Log($"Read: {Data}");
         }
 
         public override void Write(DataStreamWriter writer, TransformRPCData data)
@@ -44,6 +46,11 @@ namespace SimpleTransport
             Buffer.BlockCopy(BitConverter.GetBytes(rotation.w), 0, buff, 6 * sizeof(float), sizeof(float));
 
             writer.Write(buff);
+
+            Data.Position = position;
+            Data.Rotation = rotation;
+
+            Debug.Log(data);
         }
     }
 }

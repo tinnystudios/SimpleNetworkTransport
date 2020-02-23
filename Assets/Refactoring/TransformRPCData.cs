@@ -11,7 +11,7 @@ namespace SimpleTransport
 
         public override string ToString()
         {
-            return Target.name;
+            return $"{Target.name} {Position}";
         }
     }
 }
