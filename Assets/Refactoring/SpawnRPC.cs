@@ -18,11 +18,11 @@ namespace SimpleTransport
             Data.Ownership = (EOwnershipType)reader.ReadInt(ref context);
 
             byte[] buff = reader.ReadBytesAsArray(ref context, sizeof(float) * 7);
-            Vector3 vect = Vector3.zero;
+            Vector3 position = Vector3.zero;
 
-            vect.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
-            vect.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
-            vect.z = BitConverter.ToSingle(buff, 2 * sizeof(float));
+            position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
+            position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
+            position.z = BitConverter.ToSingle(buff, 2 * sizeof(float));
 
             var rotation = Quaternion.identity;
             rotation.x = BitConverter.ToSingle(buff, 3 * sizeof(float));
@@ -30,7 +30,7 @@ namespace SimpleTransport
             rotation.z = BitConverter.ToSingle(buff, 5 * sizeof(float));
             rotation.w = BitConverter.ToSingle(buff, 6 * sizeof(float));
 
-            Data.Position = vect;
+            Data.Position = position;
             Data.Rotation = rotation;
         }
 
