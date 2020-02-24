@@ -49,19 +49,30 @@ namespace SimpleTransport
             instance.PrefabId = prefabId;
 
             var instanceId = instance.GetInstanceID();
-            var ownership = EOwnershipType.Server;
 
             instance.InstanceId = instanceId;
 
             // For now, having a connection means it's owner owned.
             if (connection != null)
             {
-                var rpcComponents = instance.GetComponentsInChildren<RPCComponent>();
-                foreach (var rpcComponent in rpcComponents)
-                    Server.AddReader(rpcComponent.GetReader(instance));
+                AttachRPCReaderComponents(instance);
             }
 
-            // Broadcast to all clients to make this object
+            BroadcastSpawnRequest(connection, instance, prefabId, instanceId);
+
+            var broadcastRPCComponents = instance.GetComponentsInChildren<RPCComponent>();
+            foreach (var rpcComponent in broadcastRPCComponents)
+            {
+                Server.AddWriter(rpcComponent.GetWriter(instance));
+            }
+
+            Instances.Add(instance);
+        }
+
+        public void BroadcastSpawnRequest(int? connection, Ghost instance, int prefabId, int instanceId) 
+        {
+            var ownership = EOwnershipType.Server;
+
             foreach (var c in Server.Connections)
             {
                 if (connection != null)
@@ -72,23 +83,20 @@ namespace SimpleTransport
                     InstanceId = instanceId,
                     PrefabId = prefabId,
                     Ownership = ownership,
-                    Position = position,
-                    Rotation = rotation,
+                    Position = instance.transform.position,
+                    Rotation = instance.transform.rotation,
                 };
 
                 var spawnRPC = RPCFactory.Create<SpawnRPC, SpawnRPCData>(spawnRPCData);
                 Server.Write(spawnRPC, c);
             }
+        }
 
-            var cs = instance.GetComponentsInChildren<RPCComponent>();
-            foreach (var rpcComponent in cs)
-            {
-                Server.AddWriter(rpcComponent.GetWriter(instance));
-            }
-
-            // TODO Broadcast this ghost position to all clients
-
-            Instances.Add(instance);
+        public void AttachRPCReaderComponents(Ghost instance) 
+        {
+            var rpcComponents = instance.GetComponentsInChildren<RPCComponent>();
+            foreach (var rpcComponent in rpcComponents)
+                Server.AddReader(rpcComponent.GetReader(instance));
         }
 
         public void SpawnInClient(int prefabId, int instanceId, int ownershipId, Vector3 position, Quaternion rotation, NetworkClient client)
