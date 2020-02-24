@@ -19,19 +19,7 @@ namespace SimpleTransport
 
         private void OnClientConnected(NetworkConnection connection)
         {
-            foreach (var instance in Instances)
-            {
-                var data = new SpawnRPCData
-                {
-                    PrefabId = instance.PrefabId,
-                    InstanceId = instance.InstanceId,
-                    Ownership = EOwnershipType.Server,
-                };
-
-                var spawnRPC = RPCFactory.Create<SpawnRPC, SpawnRPCData>(data);
-                Server.Write(spawnRPC, connection);
-            }
-
+            SpawnInstances(connection);
             SpawnInServer(0, new Vector3(0,5,0), Quaternion.identity, connection);
         }
 
@@ -42,51 +30,14 @@ namespace SimpleTransport
 
         public void SpawnInServer(int prefabId, Vector3 position, Quaternion rotation, int? connection = null)
         {
-            var prefab = connection == null ? Ghosts[prefabId].OwnerPrefab : Ghosts[prefabId].GhostPrefab;
-            var instance = Instantiate(prefab, transform);
-            instance.transform.position = position;
-            instance.transform.rotation = rotation;
-            instance.PrefabId = prefabId;
+            var instance = CreateInstance(prefabId, position, rotation, EOwnershipType.Server);
 
-            var instanceId = instance.GetInstanceID();
-            var ownership = EOwnershipType.Server;
-
-            instance.InstanceId = instanceId;
-
-            // For now, having a connection means it's owner owned.
+            // TODO Add optional boolean for server own or not
             if (connection != null)
-            {
-                var rpcComponents = instance.GetComponentsInChildren<RPCComponent>();
-                foreach (var rpcComponent in rpcComponents)
-                    Server.AddReader(rpcComponent.GetReader(instance));
-            }
+                AddRPCComponentListenersToServer(instance);
 
-            // Broadcast to all clients to make this object
-            foreach (var c in Server.Connections)
-            {
-                if (connection != null)
-                    ownership = c.InternalId == connection.Value ? EOwnershipType.Owner : EOwnershipType.Server;
-
-                var spawnRPCData = new SpawnRPCData
-                {
-                    InstanceId = instanceId,
-                    PrefabId = prefabId,
-                    Ownership = ownership,
-                    Position = position,
-                    Rotation = rotation,
-                };
-
-                var spawnRPC = RPCFactory.Create<SpawnRPC, SpawnRPCData>(spawnRPCData);
-                Server.Write(spawnRPC, c);
-            }
-
-            var cs = instance.GetComponentsInChildren<RPCComponent>();
-            foreach (var rpcComponent in cs)
-            {
-                Server.AddWriter(rpcComponent.GetWriter(instance));
-            }
-
-            // TODO Broadcast this ghost position to all clients
+            BroadcastRPCSpawn(instance, connection);
+            BroadcastRPCComponents(instance);
 
             Instances.Add(instance);
         }
@@ -94,19 +45,8 @@ namespace SimpleTransport
         public void SpawnInClient(int prefabId, int instanceId, int ownershipId, Vector3 position, Quaternion rotation, NetworkClient client)
         {
             var type = (EOwnershipType)ownershipId;
-            var prefab = type == EOwnershipType.Owner ? Ghosts[prefabId].OwnerPrefab : Ghosts[prefabId].GhostPrefab;
-
-            // TODO Configuring the instance here determiens if it needs to read connection id or not
-            var instance = Instantiate(prefab, client.transform);
-
-            instance.InstanceId = instanceId;
-
-            instance.transform.position = position;
-            instance.transform.rotation = rotation;
-
+            var instance = CreateInstance(prefabId, position, rotation, type);
             instance.transform.name += $"Instance ID: {instanceId} Ownership: {type}";
-
-            // TODO Ghost for non-owners are not reading correctly.
 
             if (type == EOwnershipType.Owner)
             {
@@ -145,6 +85,73 @@ namespace SimpleTransport
             Destroy(instance.gameObject);
 
             Server.WriteToAllConnections(new DespawnRPC().CreateWriter(instanceId));
+        }
+
+        public void SpawnInstances(NetworkConnection connection)
+        {
+            foreach (var instance in Instances)
+            {
+                var data = new SpawnRPCData
+                {
+                    PrefabId = instance.PrefabId,
+                    InstanceId = instance.InstanceId,
+                    Ownership = EOwnershipType.Server,
+                };
+
+                var spawnRPC = RPCFactory.Create<SpawnRPC, SpawnRPCData>(data);
+                Server.Write(spawnRPC, connection);
+            }
+        }
+
+        public Ghost CreateInstance(int prefabId, Vector3 position, Quaternion rotation, EOwnershipType ownership)
+        {
+            var prefab = ownership == EOwnershipType.Owner ? Ghosts[prefabId].OwnerPrefab : Ghosts[prefabId].GhostPrefab;
+            var instance = Instantiate(prefab, transform);
+            var instanceId = instance.GetInstanceID();
+
+            instance.transform.position = position;
+            instance.transform.rotation = rotation;
+            instance.PrefabId = prefabId;
+            instance.InstanceId = instanceId;
+
+            return instance;
+        }
+
+        public void AddRPCComponentListenersToServer(Ghost instance)
+        {
+            var rpcComponents = instance.GetComponentsInChildren<RPCComponent>();
+            foreach (var rpcComponent in rpcComponents)
+                Server.AddReader(rpcComponent.GetReader(instance));
+        }
+
+        public void BroadcastRPCSpawn(Ghost instance, int? connection)
+        {
+            var ownership = EOwnershipType.Server;
+
+            foreach (var c in Server.Connections)
+            {
+                if (connection != null)
+                    ownership = c.InternalId == connection.Value ? EOwnershipType.Owner : EOwnershipType.Server;
+
+                var spawnRPCData = new SpawnRPCData
+                {
+                    InstanceId = instance.InstanceId,
+                    PrefabId = instance.PrefabId,
+                    Ownership = ownership,
+                    Position = instance.transform.position,
+                    Rotation = instance.transform.rotation,
+                };
+
+                var spawnRPC = RPCFactory.Create<SpawnRPC, SpawnRPCData>(spawnRPCData);
+                Server.Write(spawnRPC, c);
+            }
+        }
+
+        public void BroadcastRPCComponents(Ghost instance)
+        {
+            var broadcastRPCComponents = instance.GetComponentsInChildren<RPCComponent>();
+            foreach (var rpcComponent in broadcastRPCComponents)
+                Server.AddWriter(rpcComponent.GetWriter(instance));
         }
     }
 }
