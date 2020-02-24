@@ -15,6 +15,9 @@ namespace SimpleTransport
 
         public int ConnectionId => ClientConnectionRpc.Data;
 
+        public int TicksPerSecond = 60;
+        private int _currentFrame = 0;
+
         private void Awake()
         {
             Readers.Add(ClientConnectionRpc);
@@ -24,7 +27,18 @@ namespace SimpleTransport
         protected override void Update()
         {
             base.Update();
+            var updateFrame = 60 / TicksPerSecond;
 
+            _currentFrame++;
+            if (_currentFrame > updateFrame)
+            {
+                Tick();
+                _currentFrame = 0;
+            }
+        }
+
+        public void Tick()
+        {
             foreach (var networkWriter in Writers)
             {
                 var writer = networkWriter.Write();

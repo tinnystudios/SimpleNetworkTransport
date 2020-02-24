@@ -14,7 +14,7 @@ namespace SimpleTransport
 
         public NativeList<NetworkConnection> Connections => m_Connections;
 
-        private int _updatePerSeconds = 60;
+        public int TicksPerSecond = 60;
         private int _currentFrame = 0;
 
         private void Awake()
@@ -24,7 +24,7 @@ namespace SimpleTransport
 
         protected override void OnUpdate()
         {
-            var updateFrame = 60/_updatePerSeconds;
+            var updateFrame = 60/TicksPerSecond;
 
             _currentFrame++;
             if (_currentFrame > updateFrame)

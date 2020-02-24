@@ -151,6 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NetworkConfig: {fileID: 1536175138}
+  TicksPerSecond: 40
 --- !u!4 &199474844
 Transform:
   m_ObjectHideFlags: 0
@@ -288,6 +289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NetworkConfig: {fileID: 1536175138}
+  TicksPerSecond: 40
 --- !u!4 &443822474
 Transform:
   m_ObjectHideFlags: 0
@@ -456,6 +458,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NetworkConfig: {fileID: 1536175138}
+  TicksPerSecond: 40
 --- !u!4 &858834948
 Transform:
   m_ObjectHideFlags: 0
@@ -583,6 +586,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NetworkConfig: {fileID: 1536175138}
+  TicksPerSecond: 40
 --- !u!4 &966450170
 Transform:
   m_ObjectHideFlags: 0

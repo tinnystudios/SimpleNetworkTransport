@@ -9,6 +9,8 @@ namespace SimpleTransport
         public override int Capacity => 36;
         public override int Id => 4;
 
+        private Vector3? _currentPosition;
+
         public override void Read(DataStreamReader reader, ref DataStreamReader.Context context)
         {
             byte[] buff = reader.ReadBytesAsArray(ref context, sizeof(float) * 7);
@@ -24,7 +26,17 @@ namespace SimpleTransport
             rotation.z = BitConverter.ToSingle(buff, 5 * sizeof(float));
             rotation.w = BitConverter.ToSingle(buff, 6 * sizeof(float));
 
-            Data.Target.position = position;
+            var distance = Vector3.Distance(Data.Target.position, position);
+            // the further you are, the slower?
+
+            var dir = position - Data.Target.position;
+            dir.Normalize();
+
+            if (distance > 0.05F)
+                Data.Target.position += dir * 5 * Time.deltaTime;
+            else
+                Data.Target.position = position;
+
             Data.Target.rotation = rotation;
 
             //Debug.Log($"Read: {Data}");
@@ -34,6 +46,22 @@ namespace SimpleTransport
         {
             var position = data.Target.position;
             var rotation = data.Target.rotation;
+
+            if (_currentPosition == null)
+            {
+                _currentPosition = position;
+            }
+            else
+            {
+                var newPosition = position;
+                var lastPosition = _currentPosition;
+                var dir = newPosition - lastPosition;
+
+                _currentPosition = position;
+
+                var predictedPosition = newPosition + dir;
+                position = predictedPosition.Value;
+            }
 
             byte[] buff = new byte[sizeof(float) * 7];
             Buffer.BlockCopy(BitConverter.GetBytes(position.x), 0, buff, 0 * sizeof(float), sizeof(float));
@@ -45,12 +73,10 @@ namespace SimpleTransport
             Buffer.BlockCopy(BitConverter.GetBytes(rotation.z), 0, buff, 5 * sizeof(float), sizeof(float));
             Buffer.BlockCopy(BitConverter.GetBytes(rotation.w), 0, buff, 6 * sizeof(float), sizeof(float));
 
-            writer.Write(buff);
-
             Data.Position = position;
             Data.Rotation = rotation;
 
-            //Debug.Log(data);
+            writer.Write(buff);
         }
     }
 }
