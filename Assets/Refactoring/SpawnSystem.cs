@@ -43,7 +43,7 @@ namespace SimpleTransport
         public void SpawnInServer(int prefabId, Vector3 position, Quaternion rotation, int? connection = null)
         {
             var ownership = connection == null ? EOwnershipType.Owner : EOwnershipType.Server;
-            var instance = CreateInstance(prefabId, position, rotation, ownership, transform);
+            var instance = CreateInstance(prefabId, null, position, rotation, ownership, transform);
             var instanceId = instance.InstanceId;
 
             // For now, having a connection means it's owner owned.
@@ -56,14 +56,15 @@ namespace SimpleTransport
             Instances.Add(instance);
         }
 
-        public Ghost CreateInstance(int prefabId, Vector3 position, Quaternion rotation, EOwnershipType ownership, Transform parent)
+        public Ghost CreateInstance(int prefabId, int? instanceId, Vector3 position, Quaternion rotation, EOwnershipType ownership, Transform parent)
         {
             var prefab = ownership == EOwnershipType.Owner ? Ghosts[prefabId].OwnerPrefab : Ghosts[prefabId].GhostPrefab;
             var instance = Instantiate(prefab, parent);
             instance.transform.position = position;
             instance.transform.rotation = rotation;
             instance.PrefabId = prefabId;
-            instance.InstanceId = instance.GetInstanceID();
+            instance.InstanceId = instanceId ?? instance.GetInstanceID();
+
             return instance;
         }
 
@@ -109,19 +110,8 @@ namespace SimpleTransport
         public void SpawnInClient(int prefabId, int instanceId, int ownershipId, Vector3 position, Quaternion rotation, NetworkClient client)
         {
             var type = (EOwnershipType)ownershipId;
-            var prefab = type == EOwnershipType.Owner ? Ghosts[prefabId].OwnerPrefab : Ghosts[prefabId].GhostPrefab;
-
-            // TODO Configuring the instance here determiens if it needs to read connection id or not
-            var instance = Instantiate(prefab, client.transform);
-
-            instance.InstanceId = instanceId;
-
-            instance.transform.position = position;
-            instance.transform.rotation = rotation;
-
+            var instance = CreateInstance(prefabId, instanceId, position, rotation, type, client.transform);
             instance.transform.name += $"Instance ID: {instanceId} Ownership: {type}";
-
-            // TODO Ghost for non-owners are not reading correctly.
 
             if (type == EOwnershipType.Owner)
             {
