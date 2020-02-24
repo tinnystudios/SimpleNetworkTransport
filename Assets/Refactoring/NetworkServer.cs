@@ -25,16 +25,15 @@ namespace SimpleTransport
             {
                 foreach (var writer in Writers)
                 {
-                    var streamWriter = writer.Write();
-                    Write(streamWriter, connection);
+                    Write(writer, connection);
                 }
             }
         }
 
         protected override void ClientConnected(NetworkConnection connection)
         {
-            var writer = new ClientConnectionRPC().CreateWriter(connection.InternalId);
-            Write(writer, connection);
+            var writerRPC = RPCFactory.Create<ClientConnectionRPC, int>(connection.InternalId);
+            Write(writerRPC, connection);
         }
 
         protected override void ClientDisconnected(int id)
@@ -91,6 +90,11 @@ namespace SimpleTransport
                 Readers.RemoveAt(i);
                 i--;
             }
+        }
+
+        public void Write(INetworkWriter networkWriter, NetworkConnection connection)
+        {
+            Write(networkWriter.Write(), connection);
         }
 
         public void AddReader(INetworkReader reader)

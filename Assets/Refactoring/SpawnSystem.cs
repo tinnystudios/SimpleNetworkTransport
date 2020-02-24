@@ -21,7 +21,6 @@ namespace SimpleTransport
         {
             foreach (var instance in Instances)
             {
-                var spawnRPC = new SpawnRPC();
                 var data = new SpawnRPCData
                 {
                     PrefabId = instance.PrefabId,
@@ -29,8 +28,8 @@ namespace SimpleTransport
                     Ownership = EOwnershipType.Server,
                 };
 
-                var writer = spawnRPC.CreateWriter(data);
-                Server.Write(writer, connection);
+                var spawnRPC = RPCFactory.Create<SpawnRPC, SpawnRPCData>(data);
+                Server.Write(spawnRPC, connection);
             }
 
             SpawnInServer(0, new Vector3(0,5,0), Quaternion.identity, connection);
@@ -77,8 +76,8 @@ namespace SimpleTransport
                     Rotation = rotation,
                 };
 
-                var spawnWriter = new SpawnRPC().CreateWriter(spawnRPCData);
-                Server.Write(spawnWriter, c);
+                var spawnRPC = RPCFactory.Create<SpawnRPC, SpawnRPCData>(spawnRPCData);
+                Server.Write(spawnRPC, c);
             }
 
             var cs = instance.GetComponentsInChildren<RPCComponent>();
@@ -125,7 +124,6 @@ namespace SimpleTransport
 
         public void SpawnRequest(int prefabId, NetworkClient client, Vector3 position, Quaternion rotation)
         {
-            var request = new SpawnRequestRPC();
             var spawnData = new SpawnRPCData
             {
                 PrefabId = prefabId,
@@ -134,9 +132,8 @@ namespace SimpleTransport
                 Rotation = rotation,
             };
 
-            var writer = request.CreateWriter(spawnData);
-
-            client.Write(writer);
+            var request = RPCFactory.Create<SpawnRequestRPC, SpawnRPCData>(spawnData);
+            client.Write(request);
         }
 
         public void DespawnInServer(int instanceId)

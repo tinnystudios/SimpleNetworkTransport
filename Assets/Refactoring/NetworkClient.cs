@@ -81,6 +81,11 @@ namespace SimpleTransport
             writer.Dispose();
         }
 
+        public void Write(INetworkWriter networkWriter) 
+        {
+            Write(networkWriter.Write());
+        }
+
         public void Add(INetworkWriter writer)
         {
             Writers.Add(writer);
