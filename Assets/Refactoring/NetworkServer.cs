@@ -14,12 +14,27 @@ namespace SimpleTransport
 
         public NativeList<NetworkConnection> Connections => m_Connections;
 
+        private int _updatePerSeconds = 60;
+        private int _currentFrame = 0;
+
         private void Awake()
         {
             Readers.Add(new SpawnRequestRPC());
         }
 
         protected override void OnUpdate()
+        {
+            var updateFrame = 60/_updatePerSeconds;
+
+            _currentFrame++;
+            if (_currentFrame > updateFrame)
+            {
+                Tick();
+                _currentFrame = 0;
+            }
+        }
+
+        public void Tick()
         {
             foreach (var connection in m_Connections)
             {
