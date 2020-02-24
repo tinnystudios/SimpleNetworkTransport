@@ -42,31 +42,29 @@ namespace SimpleTransport
 
         public void SpawnInServer(int prefabId, Vector3 position, Quaternion rotation, int? connection = null)
         {
-            var prefab = connection == null ? Ghosts[prefabId].OwnerPrefab : Ghosts[prefabId].GhostPrefab;
-            var instance = Instantiate(prefab, transform);
-            instance.transform.position = position;
-            instance.transform.rotation = rotation;
-            instance.PrefabId = prefabId;
-
-            var instanceId = instance.GetInstanceID();
-
-            instance.InstanceId = instanceId;
+            var ownership = connection == null ? EOwnershipType.Owner : EOwnershipType.Server;
+            var instance = CreateInstance(prefabId, position, rotation, ownership, transform);
+            var instanceId = instance.InstanceId;
 
             // For now, having a connection means it's owner owned.
             if (connection != null)
-            {
-                AttachRPCReaderComponents(instance);
-            }
+                AttachRPCReaderComponentsToServer(instance);
 
             BroadcastSpawnRequest(connection, instance, prefabId, instanceId);
-
-            var broadcastRPCComponents = instance.GetComponentsInChildren<RPCComponent>();
-            foreach (var rpcComponent in broadcastRPCComponents)
-            {
-                Server.AddWriter(rpcComponent.GetWriter(instance));
-            }
+            AttachRPCWriterComponentsToServer(instance);
 
             Instances.Add(instance);
+        }
+
+        public Ghost CreateInstance(int prefabId, Vector3 position, Quaternion rotation, EOwnershipType ownership, Transform parent)
+        {
+            var prefab = ownership == EOwnershipType.Owner ? Ghosts[prefabId].OwnerPrefab : Ghosts[prefabId].GhostPrefab;
+            var instance = Instantiate(prefab, parent);
+            instance.transform.position = position;
+            instance.transform.rotation = rotation;
+            instance.PrefabId = prefabId;
+            instance.InstanceId = instance.GetInstanceID();
+            return instance;
         }
 
         public void BroadcastSpawnRequest(int? connection, Ghost instance, int prefabId, int instanceId) 
@@ -92,7 +90,16 @@ namespace SimpleTransport
             }
         }
 
-        public void AttachRPCReaderComponents(Ghost instance) 
+        public void AttachRPCWriterComponentsToServer(Ghost instance) 
+        {
+            var broadcastRPCComponents = instance.GetComponentsInChildren<RPCComponent>();
+            foreach (var rpcComponent in broadcastRPCComponents)
+            {
+                Server.AddWriter(rpcComponent.GetWriter(instance));
+            }
+        }
+
+        public void AttachRPCReaderComponentsToServer(Ghost instance) 
         {
             var rpcComponents = instance.GetComponentsInChildren<RPCComponent>();
             foreach (var rpcComponent in rpcComponents)
