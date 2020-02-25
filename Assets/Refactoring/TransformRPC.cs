@@ -30,10 +30,31 @@ namespace SimpleTransport
             var distance = Vector3.Distance(Data.Target.position, position);
             // the further you are, the slower?
 
-            var dir = position - Data.Target.position;
-            dir.Normalize();
-
             Data.Target.rotation = rotation;
+
+            if (_currentPosition == null)
+                _currentPosition = position;
+            else 
+            {
+                var dist = Vector3.Distance(_currentPosition.Value, position);
+
+                if (dist > 0.1F)
+                {
+                    var newPosition = position;
+                    var lastPosition = _currentPosition;
+                    var dir = newPosition - lastPosition;
+
+                    _currentPosition = position;
+
+                    var predictedPosition = newPosition + dir * 0.1F;
+                    position = predictedPosition.Value;
+                }
+                else 
+                {
+                    position = _currentPosition.Value;
+                }
+            }
+
             _targetPosition = position;
 
             //Debug.Log($"Read: {Data}");
@@ -43,22 +64,6 @@ namespace SimpleTransport
         {
             var position = data.Target.position;
             var rotation = data.Target.rotation;
-
-            if (_currentPosition == null)
-            {
-                _currentPosition = position;
-            }
-            else
-            {
-                var newPosition = position;
-                var lastPosition = _currentPosition;
-                var dir = newPosition - lastPosition;
-
-                _currentPosition = position;
-
-                var predictedPosition = newPosition + dir;
-                position = predictedPosition.Value;
-            }
 
             byte[] buff = new byte[sizeof(float) * 7];
             Buffer.BlockCopy(BitConverter.GetBytes(position.x), 0, buff, 0 * sizeof(float), sizeof(float));
@@ -79,7 +84,7 @@ namespace SimpleTransport
         public void Update()
         {
             if(_targetPosition != null)
-                Data.Target.position = Vector3.Lerp(Data.Target.position, _targetPosition.Value, 3 * Time.deltaTime);
+                Data.Target.position = Vector3.Lerp(Data.Target.position, _targetPosition.Value, 6 * Time.deltaTime);
         }
     }
 }
