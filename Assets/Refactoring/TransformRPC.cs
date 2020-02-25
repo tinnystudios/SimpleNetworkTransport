@@ -4,12 +4,13 @@ using UnityEngine;
 
 namespace SimpleTransport
 {
-    public class TransformRPC : RPC<TransformRPCData>
+    public class TransformRPC : RPC<TransformRPCData>, INetworkUpdate
     {
         public override int Capacity => 36;
         public override int Id => 4;
 
         private Vector3? _currentPosition;
+        private Vector3? _targetPosition;
 
         public override void Read(DataStreamReader reader, ref DataStreamReader.Context context)
         {
@@ -32,12 +33,8 @@ namespace SimpleTransport
             var dir = position - Data.Target.position;
             dir.Normalize();
 
-            if (distance > 0.05F)
-                Data.Target.position += dir * 5 * Time.deltaTime;
-            else
-                Data.Target.position = position;
-
             Data.Target.rotation = rotation;
+            _targetPosition = position;
 
             //Debug.Log($"Read: {Data}");
         }
@@ -77,6 +74,12 @@ namespace SimpleTransport
             Data.Rotation = rotation;
 
             writer.Write(buff);
+        }
+
+        public void Update()
+        {
+            if(_targetPosition != null)
+                Data.Target.position = Vector3.Lerp(Data.Target.position, _targetPosition.Value, 3 * Time.deltaTime);
         }
     }
 }

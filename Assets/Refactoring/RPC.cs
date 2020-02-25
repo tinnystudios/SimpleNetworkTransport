@@ -55,4 +55,9 @@ namespace SimpleTransport
             return writer;
         }
     }
+
+    public interface INetworkUpdate 
+    {
+        void Update();
+    }
 }

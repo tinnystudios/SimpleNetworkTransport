@@ -24,6 +24,14 @@ namespace SimpleTransport
 
         protected override void OnUpdate()
         {
+            foreach (var reader in Readers) 
+            {
+                if (reader is INetworkUpdate u) 
+                {
+                    u.Update();
+                }
+            }
+
             var updateFrame = 60/TicksPerSecond;
 
             _currentFrame++;
