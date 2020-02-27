@@ -7,6 +7,13 @@ using UnityEngine;
 
 namespace SimpleTransport
 {
+    public class NetworkPing 
+    {
+        public float? SentTime;
+        public float? ReceivedTime;
+        public float? Difference => ReceivedTime != null ? (ReceivedTime - SentTime) * 1000: null;
+    }
+
     public class NetworkServer : NetworkServerBase
     {
         public List<INetworkReader> Readers = new List<INetworkReader>();
@@ -16,6 +23,8 @@ namespace SimpleTransport
 
         public int TicksPerSecond = 60;
         private int _currentFrame = 0;
+
+        public Dictionary<int, List<NetworkPing>> _pingMap = new Dictionary<int, List<NetworkPing>>();
 
         private void Awake()
         {
@@ -49,6 +58,7 @@ namespace SimpleTransport
                 foreach (var writer in Writers)
                 {
                     Write(writer, connection);
+                    SuccessfullyWrite(writer, connection);
                 }
             }
         }
@@ -99,6 +109,48 @@ namespace SimpleTransport
 
                     // Passing the connection id will make it owned by the connection.
                     spawner.SpawnInServer(spawnData.PrefabId, spawnData.Position, spawnData.Rotation, null);
+                }
+
+                SuccessfullyRead(reader, connectionId);
+            }
+        }
+
+        // Maybe this should be an acknowledgment system instead of just a ping
+        private void SuccessfullyWrite(INetworkWriter writer, NetworkConnection connection)
+        {
+            var networkPing = new NetworkPing{SentTime = Time.time};
+
+            if (!_pingMap.ContainsKey(connection.InternalId)) 
+                _pingMap.Add(connection.InternalId, new List<NetworkPing>());
+
+            _pingMap[connection.InternalId].Add(networkPing);
+        }
+
+        private void SuccessfullyRead(INetworkReader reader, int connectionId)
+        {
+            if (!_pingMap.ContainsKey(connectionId))
+                return;
+
+            var lastSent = _pingMap[connectionId];
+            lastSent[lastSent.Count - 1].ReceivedTime = Time.time;
+        }
+
+        private void OnGUI()
+        {
+            foreach (var connection in Connections) 
+            {
+                if (_pingMap.ContainsKey(connection.InternalId)) 
+                {
+                    var pings = _pingMap[connection.InternalId];
+                    for (int i = pings.Count - 1; i > 0; i--) 
+                    {
+                        var ping = pings[i];
+                        if (ping.Difference == null)
+                            continue;
+
+                        GUILayout.Label($"{ping.Difference}");
+                        break;
+                    }
                 }
             }
         }
