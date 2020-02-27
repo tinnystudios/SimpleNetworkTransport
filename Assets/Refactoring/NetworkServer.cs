@@ -29,6 +29,7 @@ namespace SimpleTransport
         private void Awake()
         {
             Readers.Add(new SpawnRequestRPC());
+            Application.targetFrameRate = 60;
         }
 
         protected override void OnUpdate()
