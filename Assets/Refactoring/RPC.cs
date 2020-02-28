@@ -18,6 +18,35 @@ namespace SimpleTransport
 
         public T Data;
 
+        public ReaderHeader Match(DataStreamReader stream, ref DataStreamReader.Context context)
+        {
+            var readerId = stream.ReadInt(ref context);
+            if (Id != readerId)
+                return new ReaderHeader(false);
+
+            var conId = -1;
+            var instanceId = -1;
+
+            if (ConnectionId != null)
+            {
+                conId = stream.ReadInt(ref context);
+            }
+
+            if (InstanceId != null)
+            {
+                instanceId = stream.ReadInt(ref context);
+                if (InstanceId != instanceId)
+                    return new ReaderHeader(false);
+            }
+
+            return new ReaderHeader
+            {
+                Matched = true,
+                InstanceId = instanceId,
+                ConnectionId = conId,
+            };
+        }
+
         public DataStreamWriter CreateWriter(T data, INetwork network, int? connectionId = null, int? instanceId = null)
         {
             ConnectionId = connectionId;
@@ -69,5 +98,19 @@ namespace SimpleTransport
     public interface INetwork
     {
         int CurrentTick { get; }
+    }
+
+    public struct ReaderHeader
+    {
+        public bool Matched;
+        public int ConnectionId;
+        public int InstanceId;
+
+        public ReaderHeader(bool matched)
+        {
+            Matched = false;
+            ConnectionId = -1;
+            InstanceId = -1;
+        }
     }
 }

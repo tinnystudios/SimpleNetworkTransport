@@ -66,25 +66,11 @@ namespace SimpleTransport
 
                 INetworkReader reader = Readers[i];
                 var context = default(DataStreamReader.Context);
-                var readerId = stream.ReadInt(ref context);
+                var header = reader.Match(stream, ref context);
 
-                if (reader.Id != readerId)
+                if (!header.Matched)
                     continue;
-
-                //Debug.Log($"{reader.Id}-{reader.InstanceId}");
-
-                if (reader.ConnectionId != null)
-                {
-                    var conId = stream.ReadInt(ref context);
-                }
-
-                if (reader.InstanceId != null)
-                {
-                    var instanceId = stream.ReadInt(ref context);
-                    if (reader.InstanceId != instanceId)
-                        continue;
-                }
-
+                
                 reader.Read(stream, ref context);
 
                 // Need to come up with a nicer way

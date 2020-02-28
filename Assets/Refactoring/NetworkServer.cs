@@ -83,25 +83,13 @@ namespace SimpleTransport
             for (int i = 0; i < readerLength; i++)
             {
                 INetworkReader reader = Readers[i];
-                var c = default(DataStreamReader.Context);
-                var readerId = stream.ReadInt(ref c);
+                var readerContext = default(DataStreamReader.Context);
+                var header = reader.Match(stream, ref readerContext);
 
-                if (reader.Id != readerId)
+                if (!header.Matched)
                     continue;
 
-                if (reader.ConnectionId != null)
-                {
-                    var conId = stream.ReadInt(ref c);
-                }
-
-                if (reader.InstanceId != null)
-                {
-                    var instanceId = stream.ReadInt(ref c);
-                    if (reader.InstanceId != instanceId)
-                        continue;
-                }
-
-                reader.Read(stream, ref c);
+                reader.Read(stream, ref readerContext);
 
                 // TODO This should be refactored to not have to check
                 if (reader is SpawnRequestRPC spawnRpc)
