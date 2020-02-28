@@ -18,6 +18,7 @@ namespace SimpleTransport
 
         public T Data;
 
+        // Wouldn't it be smarter to read the ID, the InstanceID and then find the reader that matches?
         public ReaderHeader Match(DataStreamReader stream, ref DataStreamReader.Context context)
         {
             var readerId = stream.ReadInt(ref context);
@@ -28,16 +29,17 @@ namespace SimpleTransport
             var instanceId = -1;
 
             if (ConnectionId != null)
-            {
                 conId = stream.ReadInt(ref context);
-            }
 
             if (InstanceId != null)
             {
                 instanceId = stream.ReadInt(ref context);
+
                 if (InstanceId != instanceId)
                     return new ReaderHeader(false);
             }
+
+            var currentTick = stream.ReadInt(ref context);
 
             return new ReaderHeader
             {
@@ -62,16 +64,14 @@ namespace SimpleTransport
             writer.Write(Id);
            
             if (connectionId != null)
-            {
                 writer.Write(connectionId.Value);
-            }
+
             if (instanceId != null)
-            {
                 writer.Write(instanceId.Value);
-            }
+
+            writer.Write(network.CurrentTick);
 
             // TODO Befoer you even implement the tick, make sure to move the 'read' here.
-            //writer.Write(network.CurrentTick);
 
             Write(writer, data);
 
@@ -87,30 +87,6 @@ namespace SimpleTransport
         {
             var writer = CreateWriter(Data, network, ConnectionId, InstanceId);
             return writer;
-        }
-    }
-
-    public interface INetworkUpdate 
-    {
-        void Update();
-    }
-
-    public interface INetwork
-    {
-        int CurrentTick { get; }
-    }
-
-    public struct ReaderHeader
-    {
-        public bool Matched;
-        public int ConnectionId;
-        public int InstanceId;
-
-        public ReaderHeader(bool matched)
-        {
-            Matched = false;
-            ConnectionId = -1;
-            InstanceId = -1;
         }
     }
 }
