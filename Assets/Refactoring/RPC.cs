@@ -7,7 +7,7 @@ namespace SimpleTransport
 {
     public abstract class RPC<T> : INetworkReader, INetworkWriter
     {
-        public int BaseCapacity => 4;
+        public int BaseCapacity => 8;
         public abstract int Capacity { get; }
         public abstract int Id { get; }
 
