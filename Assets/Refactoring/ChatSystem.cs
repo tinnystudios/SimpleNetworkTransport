@@ -8,7 +8,7 @@ namespace SimpleTransport
 
         public void SendToServer(string text)
         {
-            var writer = new ChatRPC().CreateWriter(text, NetworkClient.ConnectionId);
+            var writer = new ChatRPC().CreateWriter(text, NetworkClient, NetworkClient.ConnectionId);
             NetworkClient.Write(writer);
         }
     }

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace SimpleTransport
 {
-    public class NetworkClient : NetworkClientBase
+    public class NetworkClient : NetworkClientBase, INetwork
     {
         public List<INetworkReader> Readers = new List<INetworkReader>();
         public List<INetworkWriter> Writers = new List<INetworkWriter>();
@@ -14,6 +14,8 @@ namespace SimpleTransport
         public ClientConnectionRPC ClientConnectionRpc = new ClientConnectionRPC();
 
         public int ConnectionId => ClientConnectionRpc.Data;
+
+        public int CurrentTick { get; private set; }
 
         public int TicksPerSecond = 60;
         private int _currentFrame = 0;
@@ -50,7 +52,7 @@ namespace SimpleTransport
         {
             foreach (var networkWriter in Writers)
             {
-                var writer = networkWriter.Write();
+                var writer = networkWriter.Write(this);
                 Write(writer);
             }
         }
@@ -106,7 +108,7 @@ namespace SimpleTransport
 
         public void Write(INetworkWriter networkWriter) 
         {
-            Write(networkWriter.Write());
+            Write(networkWriter.Write(this));
         }
 
         public void Add(INetworkWriter writer)

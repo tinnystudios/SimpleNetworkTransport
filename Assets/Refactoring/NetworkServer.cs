@@ -14,7 +14,7 @@ namespace SimpleTransport
         public float? Difference => ReceivedTime != null ? (ReceivedTime - SentTime) * 1000: null;
     }
 
-    public class NetworkServer : NetworkServerBase
+    public class NetworkServer : NetworkServerBase, INetwork
     {
         public List<INetworkReader> Readers = new List<INetworkReader>();
         public List<INetworkWriter> Writers = new List<INetworkWriter>();
@@ -23,8 +23,9 @@ namespace SimpleTransport
 
         public int TicksPerSecond = 60;
         private int _currentFrame = 0;
-
         public Dictionary<int, List<NetworkPing>> _pingMap = new Dictionary<int, List<NetworkPing>>();
+
+        public int CurrentTick { get; private set; }
 
         private void Awake()
         {
@@ -170,7 +171,7 @@ namespace SimpleTransport
 
         public void Write(INetworkWriter networkWriter, NetworkConnection connection)
         {
-            Write(networkWriter.Write(), connection);
+            Write(networkWriter.Write(this), connection);
         }
 
         public void AddReader(INetworkReader reader)

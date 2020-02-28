@@ -96,7 +96,7 @@ namespace SimpleTransport
             var broadcastRPCComponents = instance.GetComponentsInChildren<RPCComponent>();
             foreach (var rpcComponent in broadcastRPCComponents)
             {
-                Server.AddWriter(rpcComponent.GetWriter(instance));
+                Server.AddWriter(rpcComponent.GetWriter(instance, Server));
             }
         }
 
@@ -117,7 +117,7 @@ namespace SimpleTransport
             {
                 var rpcComponents = instance.GetComponentsInChildren<RPCComponent>();
                 foreach (var rpcComponent in rpcComponents)
-                    client.Add(rpcComponent.GetWriter(instance));
+                    client.Add(rpcComponent.GetWriter(instance, client));
             }
             else
             {
@@ -149,7 +149,7 @@ namespace SimpleTransport
             Server.ClearReferences(instanceId);
             Destroy(instance.gameObject);
 
-            Server.WriteToAllConnections(new DespawnRPC().CreateWriter(instanceId));
+            Server.WriteToAllConnections(new DespawnRPC().CreateWriter(instanceId, Server));
         }
     }
 }

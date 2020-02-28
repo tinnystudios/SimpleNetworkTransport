@@ -14,9 +14,11 @@ namespace SimpleTransport
         public int? ConnectionId { get; set; }
         public int? InstanceId { get; set; }
 
+        public INetwork Network { get; set; }
+
         public T Data;
 
-        public DataStreamWriter CreateWriter(T data, int? connectionId = null, int? instanceId = null)
+        public DataStreamWriter CreateWriter(T data, INetwork network, int? connectionId = null, int? instanceId = null)
         {
             ConnectionId = connectionId;
             InstanceId = instanceId;
@@ -29,7 +31,7 @@ namespace SimpleTransport
 
             var writer = new DataStreamWriter(totalCapacity, Allocator.Temp);
             writer.Write(Id);
-
+           
             if (connectionId != null)
             {
                 writer.Write(connectionId.Value);
@@ -38,6 +40,9 @@ namespace SimpleTransport
             {
                 writer.Write(instanceId.Value);
             }
+
+            // TODO Befoer you even implement the tick, make sure to move the 'read' here.
+            //writer.Write(network.CurrentTick);
 
             Write(writer, data);
 
@@ -49,9 +54,9 @@ namespace SimpleTransport
         public abstract void Write(DataStreamWriter writer, T data);
         public abstract void Read(DataStreamReader reader, ref DataStreamReader.Context context);
 
-        public DataStreamWriter Write(int? connectionId = null, int? instanceId = null)
+        public DataStreamWriter Write(INetwork network, int? connectionId = null, int? instanceId = null)
         {
-            var writer = CreateWriter(Data, ConnectionId, InstanceId);
+            var writer = CreateWriter(Data, network, ConnectionId, InstanceId);
             return writer;
         }
     }
@@ -59,5 +64,10 @@ namespace SimpleTransport
     public interface INetworkUpdate 
     {
         void Update();
+    }
+
+    public interface INetwork
+    {
+        int CurrentTick { get; }
     }
 }

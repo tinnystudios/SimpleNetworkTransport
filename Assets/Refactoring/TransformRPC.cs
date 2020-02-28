@@ -38,7 +38,7 @@ namespace SimpleTransport
             {
                 var dist = Vector3.Distance(_currentPosition.Value, position);
 
-                if (dist > 0.1F)
+                if (dist > 0.01f)
                 {
                     var newPosition = position;
                     var lastPosition = _currentPosition;
@@ -46,7 +46,7 @@ namespace SimpleTransport
 
                     _currentPosition = position;
 
-                    var predictedPosition = newPosition + dir * 0.1F;
+                    var predictedPosition = newPosition + dir * 1.1F;
                     position = predictedPosition.Value;
                 }
                 else 
@@ -84,7 +84,7 @@ namespace SimpleTransport
         public void Update()
         {
             if(_targetPosition != null)
-                Data.Target.position = Vector3.Lerp(Data.Target.position, _targetPosition.Value, 6 * Time.deltaTime);
+                Data.Target.position = Vector3.Lerp(Data.Target.position, _targetPosition.Value, 3 * Time.deltaTime);
         }
     }
 }

@@ -16,13 +16,13 @@ namespace SimpleTransport
             };
         }
 
-        public override INetworkWriter GetWriter(Ghost ghost)
+        public override INetworkWriter GetWriter(Ghost ghost, INetwork network)
         {
             var transformRPC = new TransformRPC();
             var transformData = new TransformRPCData { Target = ghost.transform };
 
             // TODO You shoudn't have to create it for it to be called by the client
-            transformRPC.CreateWriter(transformData, instanceId: ghost.InstanceId);
+            transformRPC.CreateWriter(transformData, network, instanceId: ghost.InstanceId);
             return transformRPC;
         }
     }
