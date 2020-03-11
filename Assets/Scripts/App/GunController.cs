@@ -5,16 +5,17 @@ public class GunController : MonoBehaviour
 {
     public SpawnSystem Spawner;
     public NetworkClient Client;
+    public Transform Target;
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F) || OVRInput.GetUp(OVRInput.Button.PrimaryIndexTrigger) || OVRInput.GetUp(OVRInput.Button.SecondaryHandTrigger))
         {
             Spawner = Spawner ?? FindObjectOfType<SpawnSystem>();
             Client = Client ?? GetComponentInParent<NetworkClient>();
 
-            var pos = transform.position + transform.forward * 1.0F;
-            Spawner.SpawnRequest(1, Client, pos, transform.rotation);
+            var pos = Target.position + Target.forward * 1.0F;
+            Spawner.SpawnRequest(1, Client, pos, Target.rotation);
         }
     }
 }
