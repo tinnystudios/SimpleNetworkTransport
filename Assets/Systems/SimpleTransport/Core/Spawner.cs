@@ -8,7 +8,6 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     public Server Server;
-
     public List<GhostPair> Ghosts;
     public List<Ghost> Instances;
 
@@ -32,7 +31,7 @@ public class Spawner : MonoBehaviour
         // For now, having a connection means it's owner owned.
         if (connection != null)
         {
-            instance.ConnectionId = connection.Value.InternalId;
+            //instance.ConnectionId = connection.Value.InternalId;
 
             foreach (var reader in instance.Readers)
             {

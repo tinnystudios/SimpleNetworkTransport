@@ -13,6 +13,10 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-
+        var player = collider.GetComponent<Player>();
+        if (player != null)
+        {
+            player.TakeDamage();
+        }
     }
 }
