@@ -4,8 +4,11 @@ using UnityEngine;
 
 namespace SimpleTransport
 {
+    [Serializable]
     public class TransformRPC : RPC<TransformRPCData>, INetworkUpdate
     {
+        public float InterpolationFactor = 3;
+
         public override int Capacity => 36;
         public override int Id => 4;
 
@@ -26,9 +29,6 @@ namespace SimpleTransport
             rotation.y = BitConverter.ToSingle(buff, 4 * sizeof(float));
             rotation.z = BitConverter.ToSingle(buff, 5 * sizeof(float));
             rotation.w = BitConverter.ToSingle(buff, 6 * sizeof(float));
-
-            var distance = Vector3.Distance(Data.Target.position, position);
-            // the further you are, the slower?
 
             Data.Target.rotation = rotation;
 
@@ -84,7 +84,7 @@ namespace SimpleTransport
         public void Update()
         {
             if(_targetPosition != null)
-                Data.Target.position = Vector3.Lerp(Data.Target.position, _targetPosition.Value, 3 * Time.deltaTime);
+                Data.Target.position = Vector3.Lerp(Data.Target.position, _targetPosition.Value, InterpolationFactor * Time.deltaTime);
         }
     }
 }

@@ -150,3 +150,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5790f7059bd15484dbfb5e8f46ad5ddd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Target: {fileID: 8502657812440977464}
+  RPC:
+    InterpolationFactor: 10

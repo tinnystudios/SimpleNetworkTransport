@@ -12,6 +12,16 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2882743737573654367, guid: 77f5a3abc26403a4299bc44d5b8aa499,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 469934d1528255a47987db64b261d27b, type: 2}
+    - target: {fileID: 3745770590821347219, guid: 77f5a3abc26403a4299bc44d5b8aa499,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3749467709236930404, guid: 77f5a3abc26403a4299bc44d5b8aa499,
         type: 3}
       propertyPath: m_IsTrigger
@@ -102,6 +112,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerGhost
       objectReference: {fileID: 0}
+    - target: {fileID: 7989941261318604080, guid: 77f5a3abc26403a4299bc44d5b8aa499,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 469934d1528255a47987db64b261d27b, type: 2}
     m_RemovedComponents:
     - {fileID: 8008684176529282714, guid: 77f5a3abc26403a4299bc44d5b8aa499, type: 3}
     - {fileID: 8660230296112097353, guid: 77f5a3abc26403a4299bc44d5b8aa499, type: 3}

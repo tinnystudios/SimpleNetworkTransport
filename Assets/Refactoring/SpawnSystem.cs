@@ -32,7 +32,11 @@ namespace SimpleTransport
                 Server.Write(spawnRPC, connection);
             }
 
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR
+            SpawnInServer(2, new Vector3(0, 5, 0), Quaternion.identity, connection);
+#else
             SpawnInServer(0, new Vector3(0,0,0), Quaternion.identity, connection);
+#endif
         }
 
         public void SpawnInServer(int prefabId, Vector3 position, Quaternion rotation, NetworkConnection connection)
